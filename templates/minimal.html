@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FertiVision-CodeLM - Minimal Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f8fafc; }
+        .tabs-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { padding: 10px 20px; background: #6366f1; color: white; border: none; cursor: pointer; border-radius: 8px; }
+        .tab-btn.active { background: #4f46e5; }
+        .tab-content { display: none; padding: 20px; border: 1px solid #e5e7eb; background: white; border-radius: 8px; }
+        .tab-content.active { display: block; }
+        .tab-content form { display: flex; gap: 10px; align-items: center; }
+        .tab-content button { background: #6366f1; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; }
+        .tab-content button:hover { background: #4f46e5; }
+    </style>
+</head>
+<body>
+    <h1>🧠 FertiVision-CodeLM</h1>
+    
+    <div class="tabs-row">
+        <button class="tab-btn active" onclick="showTab('tab1', this)">Sperm Analysis</button>
+        <button class="tab-btn" onclick="showTab('tab2', this)">Oocyte Grading</button>
+        <button class="tab-btn" onclick="showTab('tab3', this)">Embryo Classification</button>
+        <button class="tab-btn" onclick="showTab('tab4', this)">Follicle Scan</button>
+        <button class="tab-btn" onclick="showTab('tab5', this)">Hysteroscopy</button>
+    </div>
+    
+    <div id="tab1" class="tab-content active">
+        <h2>Sperm Analysis</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <input type="hidden" name="tab" value="Sperm Analysis">
+            <button type="submit">Analyze</button>
+        </form>
+    </div>
+    
+    <div id="tab2" class="tab-content">
+        <h2>Oocyte Grading</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <input type="hidden" name="tab" value="Oocyte Grading">
+            <button type="submit">Grade</button>
+        </form>
+    </div>
+    
+    <div id="tab3" class="tab-content">
+        <h2>Embryo Classification</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <input type="hidden" name="tab" value="Embryo Classification">
+            <button type="submit">Classify</button>
+        </form>
+    </div>
+    
+    <div id="tab4" class="tab-content">
+        <h2>Follicle Scan</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <input type="hidden" name="tab" value="Follicle Scan">
+            <button type="submit">Scan</button>
+        </form>
+    </div>
+    
+    <div id="tab5" class="tab-content">
+        <h2>Hysteroscopy</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <input type="hidden" name="tab" value="Hysteroscopy">
+            <button type="submit">Detect</button>
+        </form>
+    </div>
+    
+    <script>
+        function showTab(tabId, btn) {
+            console.log('Switching to tab:', tabId);
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if(btn) btn.classList.add('active');
+        }
+    </script>
+</body>
+</html>
