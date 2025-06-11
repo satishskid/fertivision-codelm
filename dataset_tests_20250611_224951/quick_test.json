@@ -1,0 +1,29 @@
+{
+  "test_session_id": "20250611_224951",
+  "timestamp": "2025-06-11T22:50:21.536727",
+  "summary": {
+    "total_tests": 1,
+    "successful_tests": 1,
+    "success_rate": 1.0,
+    "average_processing_time": 29.92083
+  },
+  "analysis_type_breakdown": {
+    "ultrasound_follicle": {
+      "total": 1,
+      "successful": 1,
+      "success_rate": 1.0
+    }
+  },
+  "detailed_results": [
+    {
+      "dataset": "single_image",
+      "image": "download_2.jpeg",
+      "type": "ultrasound_follicle",
+      "success": true,
+      "processing_time": 29.92083,
+      "metrics": {
+        "follicle_count": 1
+      }
+    }
+  ]
+}

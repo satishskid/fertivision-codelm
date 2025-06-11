@@ -20,7 +20,7 @@ class MedicalDiscipline(Enum):
 # Application Configuration
 class Config:
     # Mode Configuration
-    ANALYSIS_MODE = AnalysisMode.MOCK  # Default to MOCK for testing (change to DEEPSEEK for production)
+    ANALYSIS_MODE = AnalysisMode.DEEPSEEK  # Default to MOCK for testing (change to DEEPSEEK for production)
     
     # DeepSeek/Ollama Configuration
     DEEPSEEK_URL = "http://localhost:11434/api/generate"
@@ -157,5 +157,5 @@ if os.getenv('FERTIVISION_ENV') == 'production':
     Config.ANALYSIS_MODE = AnalysisMode.DEEPSEEK
     Config.ENABLE_AUTH = True
 elif os.getenv('FERTIVISION_ENV') == 'demo':
-    Config.ANALYSIS_MODE = AnalysisMode.MOCK
+    Config.ANALYSIS_MODE = AnalysisMode.DEEPSEEK
     Config.ENABLE_AUTH = False

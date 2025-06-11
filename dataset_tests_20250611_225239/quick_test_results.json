@@ -1,0 +1,68 @@
+{
+  "test_session_id": "20250611_225239",
+  "timestamp": "2025-06-11T22:54:19.921770",
+  "summary": {
+    "total_tests": 4,
+    "successful_tests": 4,
+    "success_rate": 1.0,
+    "average_processing_time": 25.0035825
+  },
+  "analysis_type_breakdown": {
+    "ultrasound_follicle": {
+      "total": 2,
+      "successful": 2,
+      "success_rate": 1.0
+    },
+    "sperm_analysis": {
+      "total": 1,
+      "successful": 1,
+      "success_rate": 1.0
+    },
+    "general_medical": {
+      "total": 1,
+      "successful": 1,
+      "success_rate": 1.0
+    }
+  },
+  "detailed_results": [
+    {
+      "dataset": "single_image",
+      "image": "download (3).jpeg",
+      "type": "ultrasound_follicle",
+      "success": true,
+      "processing_time": 28.463754,
+      "metrics": {
+        "follicle_count": 1
+      }
+    },
+    {
+      "dataset": "single_image",
+      "image": "download (3).jpeg",
+      "type": "ultrasound_follicle",
+      "success": true,
+      "processing_time": 25.957898,
+      "metrics": {
+        "follicle_count": 14,
+        "dominant_size_mm": 8.0
+      }
+    },
+    {
+      "dataset": "single_image",
+      "image": "download (3).jpeg",
+      "type": "sperm_analysis",
+      "success": true,
+      "processing_time": 28.170823,
+      "metrics": {
+        "concentration_million_per_ml": 200.0
+      }
+    },
+    {
+      "dataset": "single_image",
+      "image": "download (3).jpeg",
+      "type": "general_medical",
+      "success": true,
+      "processing_time": 17.421855,
+      "metrics": {}
+    }
+  ]
+}

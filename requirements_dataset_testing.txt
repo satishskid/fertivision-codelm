@@ -1,0 +1,28 @@
+# Dataset Testing Module Requirements
+# Install with: pip install -r requirements_dataset_testing.txt
+
+# Core dependencies
+datasets>=2.14.0          # Hugging Face datasets
+pandas>=1.5.0             # Data manipulation
+numpy>=1.21.0             # Numerical operations
+matplotlib>=3.5.0         # Plotting
+seaborn>=0.11.0           # Statistical visualization
+Pillow>=9.0.0             # Image processing
+requests>=2.28.0          # HTTP requests
+
+# Optional but recommended
+transformers>=4.21.0      # For future model fine-tuning
+torch>=1.12.0             # PyTorch for deep learning
+torchvision>=0.13.0       # Computer vision utilities
+scikit-learn>=1.1.0       # Machine learning metrics
+tqdm>=4.64.0              # Progress bars
+
+# Development and testing
+pytest>=7.0.0             # Testing framework
+jupyter>=1.0.0            # Jupyter notebooks for analysis
+ipywidgets>=8.0.0         # Interactive widgets
+
+# Medical imaging specific (optional)
+pydicom>=2.3.0            # DICOM medical image format
+SimpleITK>=2.2.0          # Medical image processing
+opencv-python>=4.6.0     # Computer vision

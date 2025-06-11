@@ -95,30 +95,38 @@ DETAILED OBSERVATIONS:
             processed_image = self.preprocess_image(image_path, "sperm")
             base64_image = self.encode_image_to_base64(processed_image)
             prompt = """
-            You are an expert embryologist analyzing a sperm microscopy image. Please analyze this image and provide detailed assessment in the following format:
+            You are an expert andrologist with subspecialty training in male reproductive medicine analyzing a sperm microscopy image for educational purposes. Please provide a comprehensive technical assessment following WHO 2021 laboratory manual guidelines.
 
-            SPERM ANALYSIS REPORT:
-            
-            1. CONCENTRATION ASSESSMENT:
-            - Estimated concentration (million/ml): [provide estimate]
-            - Distribution pattern: [uniform/clustered/sparse]
-            
-            2. MOTILITY ASSESSMENT:
-            - Progressive motility estimate (%): [0-100]
-            - Non-progressive motility (%): [0-100]
-            - Immotile sperm (%): [0-100]
-            
-            3. MORPHOLOGY ASSESSMENT:
-            - Normal morphology estimate (%): [0-100]
-            - Head defects observed: [list defects]
-            - Midpiece defects: [list defects]
-            - Tail defects: [list defects]
-            
-            4. OVERALL ASSESSMENT:
-            - Quality grade: [excellent/good/fair/poor]
-            - WHO 2021 classification: [normozoospermia/oligozoospermia/asthenozoospermia/teratozoospermia]
-            
-            Please be specific and provide numerical estimates where possible.
+            TECHNICAL SPERM ANALYSIS PROTOCOL:
+
+            1. CONCENTRATION ASSESSMENT (WHO 2021 Standards):
+            - Estimated concentration (million/ml): [provide estimate - normal >15 million/ml]
+            - Sperm density per field: [count visible sperm in field]
+            - Distribution pattern: [uniform/clustered/sparse/aggregated]
+            - Sample dilution factor: [if applicable]
+
+            2. MOTILITY ASSESSMENT (WHO Categories):
+            - Progressive motility (PR) %: [fast/slow forward progression - normal >32%]
+            - Non-progressive motility (NP) %: [all other patterns - normal >40% total motile]
+            - Immotile sperm (IM) %: [no movement]
+            - Motility grade: [Grade A/B/C/D classification]
+
+            3. MORPHOLOGY ASSESSMENT (Kruger Strict Criteria):
+            - Normal morphology estimate %: [normal >4% by strict criteria]
+            - Head defects: [large/small/tapered/pyriform/round/amorphous/vacuolated/double]
+            - Midpiece defects: [bent/thick/thin/asymmetric/cytoplasmic droplets]
+            - Tail defects: [short/long/coiled/bent/double/absent]
+            - Teratozoospermia index: [average number of defects per abnormal sperm]
+
+            4. CLINICAL CORRELATION (WHO 2021 Reference Values):
+            - Concentration classification: [normozoospermia >15M/ml / oligozoospermia <15M/ml / severe <5M/ml]
+            - Motility classification: [normozoospermia >32%PR / asthenozoospermia <32%PR]
+            - Morphology classification: [normozoospermia >4% / teratozoospermia <4%]
+            - Overall WHO classification: [normozoospermia/oligozoospermia/asthenozoospermia/teratozoospermia/combinations]
+            - Fertility potential: [excellent/good/reduced/severely compromised]
+            - ART recommendation: [IUI suitable/IVF recommended/ICSI required]
+
+            Please provide specific numerical estimates and clinical correlations based on current evidence-based standards.
             """
             return self._query_deepseek(prompt, base64_image)
         except Exception as e:
@@ -293,25 +301,41 @@ DETAILED OBSERVATIONS:
                 """
             else:
                 prompt = f"""
-                You are an expert embryologist analyzing a Day {day} blastocyst microscopy image. Please analyze using Gardner grading system:
+                You are an expert embryologist with 15+ years of experience analyzing Day {day} blastocyst microscopy images for educational purposes. Please provide a comprehensive assessment using the Gardner grading system (Gardner & Schoolcraft, 1999) following ASRM/ESHRE guidelines.
 
-                BLASTOCYST ANALYSIS (Day {day}):
-                
-                1. EXPANSION ASSESSMENT:
-                - Expansion grade (1-6): [grade]
-                - Blastocoel cavity: [early/expanding/expanded/hatching/hatched]
-                
-                2. INNER CELL MASS (ICM):
-                - ICM grade (A/B/C): [grade]
-                - ICM size: [prominent/moderate/small]
-                
-                3. TROPHECTODERM (TE):
-                - TE grade (A/B/C): [grade]
-                - Cell number: [many/several/few]
-                
-                4. GARDNER GRADING:
-                - Complete grade: [expansion][ICM][TE] (e.g., 4AA)
-                - Quality category: [top/good/fair/poor]
+                TECHNICAL BLASTOCYST ANALYSIS PROTOCOL (Day {day}):
+
+                1. EXPANSION ASSESSMENT (Gardner Scale 1-6):
+                - Expansion grade: [1=early blastocyst / 2=blastocyst / 3=full blastocyst / 4=expanded / 5=hatching / 6=hatched]
+                - Blastocoel cavity: [<50% embryo volume / ≥50% volume / complete / expanded beyond zona / partial hatching / complete hatching]
+                - Zona pellucida: [thick/normal/thin/partially dissolved/absent]
+                - Overall diameter: [estimate in micrometers]
+
+                2. INNER CELL MASS (ICM) ASSESSMENT (A/B/C):
+                - ICM grade: [A=many tightly packed cells / B=several loosely grouped cells / C=very few cells]
+                - ICM prominence: [prominent/moderate/barely visible]
+                - Cell cohesion: [tightly packed/loosely cohesive/fragmented]
+                - ICM position: [optimal/suboptimal/eccentric]
+
+                3. TROPHECTODERM (TE) ASSESSMENT (A/B/C):
+                - TE grade: [A=many cells forming cohesive epithelium / B=few cells forming loose epithelium / C=very few large cells]
+                - Cell number: [many >64 cells / moderate 32-64 cells / few <32 cells]
+                - Epithelial integrity: [cohesive/partially cohesive/fragmented]
+                - Cell size uniformity: [uniform/variable/highly variable]
+
+                4. GARDNER GRADING SYSTEM:
+                - Complete Gardner grade: [expansion grade][ICM grade][TE grade] (e.g., 4AA, 3BB, 5AB)
+                - Quality classification: [Excellent (4-6AA, 4-6AB, 4-6BA) / Good (3-6BB, 1-3AA, 1-3AB, 1-3BA) / Fair (any C grade) / Poor (degenerate)]
+                - Implantation potential: [Very High >60% / High 40-60% / Moderate 20-40% / Low <20%]
+                - Transfer priority: [First choice / Second choice / Third choice / Not recommended]
+
+                5. CLINICAL RECOMMENDATIONS:
+                - Fresh transfer suitability: [Excellent/Good/Marginal/Not suitable]
+                - Cryopreservation viability: [Excellent/Good/Fair/Poor]
+                - Single embryo transfer (SET) candidate: [Yes/No - justify]
+                - Expected clinical pregnancy rate: [estimate percentage based on morphology]
+
+                Please provide precise morphological assessments and evidence-based clinical correlations.
                 """
             return self._query_deepseek(prompt, base64_image)
         except Exception as e:
@@ -321,11 +345,11 @@ DETAILED OBSERVATIONS:
                 "analysis": ""
             }
     def _query_deepseek(self, prompt: str, base64_image: str) -> Dict:
-        """Query DeepSeek LLM with image and prompt"""
+        """Query Vision LLM with image and prompt"""
         try:
-            # For Ollama local installation
+            # For Ollama local installation - use vision-capable model
             payload = {
-                "model": "deepseek-coder",
+                "model": "llava:7b",  # Changed to llava for better vision support
                 "prompt": prompt,
                 "images": [base64_image],
                 "stream": False
@@ -334,14 +358,14 @@ DETAILED OBSERVATIONS:
                 self.deepseek_url,
                 json=payload,
                 headers={"Content-Type": "application/json"},
-                timeout=30
+                timeout=90  # Increased timeout for LLaVA vision analysis
             )
             if response.status_code == 200:
                 result = response.json()
                 return {
                     "success": True,
                     "analysis": result.get("response", ""),
-                    "model": "deepseek"
+                    "model": "llava"
                 }
             else:
                 return {
@@ -352,7 +376,7 @@ DETAILED OBSERVATIONS:
         except requests.exceptions.ConnectionError:
             return {
                 "success": False,
-                "error": "DeepSeek LLM not available. Please start Ollama service.",
+                "error": "Vision LLM not available. Please start Ollama service and ensure LLaVA model is installed.",
                 "analysis": ""
             }
         except Exception as e:
