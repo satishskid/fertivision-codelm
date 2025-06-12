@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FertiVision powered by AI - Model Configuration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .config-container {
+            padding: 2rem;
+        }
+        
+        .tab-nav {
+            display: flex;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 2rem;
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .config-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .config-section h3 {
+            color: #495057;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-right: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .status-enabled {
+            background: #28a745;
+        }
+        
+        .status-disabled {
+            background: #dc3545;
+        }
+        
+        .status-warning {
+            background: #ffc107;
+        }
+        
+        .model-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .model-card h4 {
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+        
+        .model-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cost-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .test-results {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-nav {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Model Configuration</h1>
+            <p>FertiVision powered by AI - Configure Models & APIs</p>
+            <div style="margin-top: 1.5rem; font-size: 0.85rem; color: rgba(255,255,255,0.7); font-style: italic; font-weight: 300;">
+                made by greybrain.ai
+            </div>
+        </div>
+        
+        <div class="config-container">
+            <div class="tab-nav">
+                <button class="tab active" onclick="showTab('overview')">📊 Overview</button>
+                <button class="tab" onclick="showTab('models')">🤖 Models</button>
+                <button class="tab" onclick="showTab('apis')">🔑 API Keys</button>
+                <button class="tab" onclick="showTab('test')">🧪 Test</button>
+            </div>
+            
+            <!-- Overview Tab -->
+            <div id="overview-tab" class="tab-content active">
+                <div class="config-section">
+                    <h3>Current Configuration Status</h3>
+                    <div id="config-status">
+                        <p>Loading configuration...</p>
+                    </div>
+                </div>
+                
+                <div class="config-section">
+                    <h3>Quick Actions</h3>
+                    <button class="btn" onclick="loadConfiguration()">🔄 Refresh Status</button>
+                    <button class="btn" onclick="testAllModels()">🧪 Test All Models</button>
+                    <button class="btn btn-secondary" onclick="resetToDefaults()">🔄 Reset to Defaults</button>
+                </div>
+            </div>
+            
+            <!-- Models Tab -->
+            <div id="models-tab" class="tab-content">
+                <div class="config-section">
+                    <h3>Analysis Type Configurations</h3>
+                    <div id="model-configurations">
+                        <p>Loading model configurations...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API Keys Tab -->
+            <div id="apis-tab" class="tab-content">
+                <div class="config-section">
+                    <h3>API Key Configuration</h3>
+                    <p class="mb-3">Configure API keys for cloud providers. Keys are stored securely and only used for AI analysis.</p>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>🆓 OpenRouter API Key (Free Tier):</label>
+                            <input type="password" id="openrouter-key" placeholder="sk-or-...">
+                            <small>Access multiple models with generous free tier</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>⚡ Groq API Key (Free Tier):</label>
+                            <input type="password" id="groq-key" placeholder="gsk_...">
+                            <small>Ultra-fast inference with free tier</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>🤝 Together AI API Key:</label>
+                            <input type="password" id="together-key" placeholder="...">
+                            <small>Affordable open source models</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>💰 DeepSeek API Key (Very Cheap):</label>
+                            <input type="password" id="deepseek-key" placeholder="sk-...">
+                            <small>High-quality models at very low cost</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>OpenAI API Key:</label>
+                            <input type="password" id="openai-key" placeholder="sk-...">
+                            <small>For GPT-4 Vision and text models</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Anthropic API Key:</label>
+                            <input type="password" id="anthropic-key" placeholder="sk-ant-...">
+                            <small>For Claude models</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Google API Key:</label>
+                            <input type="password" id="google-key" placeholder="AIza...">
+                            <small>For Gemini models</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Azure OpenAI Key:</label>
+                            <input type="password" id="azure-key" placeholder="...">
+                            <small>For Azure OpenAI services</small>
+                        </div>
+                    </div>
+                    
+                    <button class="btn" onclick="saveApiKeys()">💾 Save API Keys</button>
+                    <button class="btn btn-secondary" onclick="testApiKeys()">🧪 Test Connections</button>
+                </div>
+            </div>
+            
+            <!-- Test Tab -->
+            <div id="test-tab" class="tab-content">
+                <div class="config-section">
+                    <h3>Model Testing</h3>
+                    <p>Test your configured models to ensure they're working correctly.</p>
+                    
+                    <div class="form-group">
+                        <label>Analysis Type to Test:</label>
+                        <select id="test-analysis-type">
+                            <option value="vision_analysis">Vision Analysis</option>
+                            <option value="follicle_analysis">Follicle Analysis</option>
+                            <option value="sperm_analysis">Sperm Analysis</option>
+                            <option value="embryo_analysis">Embryo Analysis</option>
+                            <option value="oocyte_analysis">Oocyte Analysis</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Test Image (optional):</label>
+                        <input type="file" id="test-image" accept="image/*">
+                    </div>
+                    
+                    <button class="btn" onclick="runModelTest()">🚀 Run Test</button>
+                    
+                    <div id="test-results" class="test-results" style="display: none;">
+                        <h4>Test Results:</h4>
+                        <div id="test-output"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global configuration data
+        let configData = {};
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+            
+            // Load data for specific tabs
+            if (tabName === 'overview' || tabName === 'models') {
+                loadConfiguration();
+            }
+        }
+        
+        async function loadConfiguration() {
+            try {
+                const response = await fetch('/api/model_config');
+                configData = await response.json();
+                
+                updateOverviewTab();
+                updateModelsTab();
+            } catch (error) {
+                console.error('Error loading configuration:', error);
+                document.getElementById('config-status').innerHTML = 
+                    '<p class="error">❌ Error loading configuration</p>';
+            }
+        }
+        
+        function updateOverviewTab() {
+            const statusDiv = document.getElementById('config-status');
+            let html = '<div class="form-grid">';
+            
+            for (const [analysisType, config] of Object.entries(configData)) {
+                const status = config.primary_model.enabled ? 'enabled' : 'disabled';
+                const provider = config.primary_model.provider;
+                const model = config.primary_model.model_name;
+                
+                html += `
+                    <div class="model-card">
+                        <div class="model-info">
+                            <h4><span class="status-indicator status-${status}"></span>${analysisType}</h4>
+                            <span class="cost-info">$${config.primary_model.cost_per_1k_tokens}/1K tokens</span>
+                        </div>
+                        <p><strong>Provider:</strong> ${provider}</p>
+                        <p><strong>Model:</strong> ${model}</p>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            statusDiv.innerHTML = html;
+        }
+        
+        function updateModelsTab() {
+            const modelsDiv = document.getElementById('model-configurations');
+            let html = '';
+            
+            for (const [analysisType, config] of Object.entries(configData)) {
+                html += `
+                    <div class="model-card">
+                        <h4>${analysisType.replace('_', ' ').toUpperCase()}</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Primary Provider:</label>
+                                <select onchange="updatePrimaryModel('${analysisType}', this.value)">
+                                    <option value="ollama_local" ${config.primary_model.provider === 'ollama_local' ? 'selected' : ''}>🏠 Local (Ollama)</option>
+                                    <option value="openrouter" ${config.primary_model.provider === 'openrouter' ? 'selected' : ''}>🆓 OpenRouter (Free)</option>
+                                    <option value="groq" ${config.primary_model.provider === 'groq' ? 'selected' : ''}>⚡ Groq (Free)</option>
+                                    <option value="together_ai" ${config.primary_model.provider === 'together_ai' ? 'selected' : ''}>🤝 Together AI</option>
+                                    <option value="deepseek" ${config.primary_model.provider === 'deepseek' ? 'selected' : ''}>💰 DeepSeek (Cheap)</option>
+                                    <option value="openai" ${config.primary_model.provider === 'openai' ? 'selected' : ''}>🔥 OpenAI</option>
+                                    <option value="anthropic" ${config.primary_model.provider === 'anthropic' ? 'selected' : ''}>🧠 Anthropic</option>
+                                    <option value="google" ${config.primary_model.provider === 'google' ? 'selected' : ''}>🔍 Google</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Model:</label>
+                                <input type="text" value="${config.primary_model.model_name}" 
+                                       onchange="updateModelName('${analysisType}', this.value)">
+                            </div>
+                        </div>
+                        <p><strong>Fallback Models:</strong> ${config.fallback_models.length}</p>
+                    </div>
+                `;
+            }
+            
+            modelsDiv.innerHTML = html;
+        }
+        
+        async function saveApiKeys() {
+            const apiKeys = {
+                openrouter: document.getElementById('openrouter-key').value,
+                groq: document.getElementById('groq-key').value,
+                together: document.getElementById('together-key').value,
+                deepseek: document.getElementById('deepseek-key').value,
+                openai: document.getElementById('openai-key').value,
+                anthropic: document.getElementById('anthropic-key').value,
+                google: document.getElementById('google-key').value,
+                azure: document.getElementById('azure-key').value
+            };
+            
+            try {
+                const response = await fetch('/api/save_api_keys', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(apiKeys)
+                });
+                
+                if (response.ok) {
+                    alert('✅ API keys saved successfully!');
+                } else {
+                    alert('❌ Error saving API keys');
+                }
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+        }
+        
+        async function testAllModels() {
+            const testResults = document.getElementById('test-results');
+            testResults.style.display = 'block';
+            testResults.innerHTML = '<p>🧪 Testing all models...</p>';
+            
+            try {
+                const response = await fetch('/api/test_models', {method: 'POST'});
+                const results = await response.json();
+                
+                let html = '<h4>Test Results:</h4>';
+                for (const [analysisType, result] of Object.entries(results)) {
+                    const status = result.success ? '✅' : '❌';
+                    html += `<p>${status} ${analysisType}: ${result.message}</p>`;
+                }
+                
+                testResults.innerHTML = html;
+            } catch (error) {
+                testResults.innerHTML = '<p class="error">❌ Error testing models</p>';
+            }
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadConfiguration();
+        });
+    </script>
+</body>
+</html>

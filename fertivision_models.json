@@ -1,0 +1,334 @@
+{
+  "vision_analysis": {
+    "primary_model": {
+      "provider": "ollama_local",
+      "model_name": "llava:7b",
+      "api_url": "http://localhost:11434/api/generate",
+      "api_key": null,
+      "timeout": 90,
+      "max_tokens": null,
+      "temperature": 0.1,
+      "enabled": true,
+      "cost_per_1k_tokens": 0.0,
+      "notes": "Local LLaVA model via Ollama"
+    },
+    "fallback_models": [
+      {
+        "provider": "groq",
+        "model_name": "llava-v1.5-7b-4096-preview",
+        "api_url": "https://api.groq.com/openai/v1/chat/completions",
+        "api_key": "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",
+        "timeout": 30,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": true,
+        "cost_per_1k_tokens": 0.0,
+        "notes": "Groq - Ultra-fast inference with generous free tier"
+      },
+      {
+        "provider": "openrouter",
+        "model_name": "google/gemini-pro-vision",
+        "api_url": "https://openrouter.ai/api/v1/chat/completions",
+        "api_key": "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",
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": true,
+        "cost_per_1k_tokens": 0.000375,
+        "notes": "OpenRouter - Access to multiple models with free tier"
+      },
+      {
+        "provider": "together_ai",
+        "model_name": "meta-llama/Llama-Vision-Free",
+        "api_url": "https://api.together.xyz/v1/chat/completions",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": false,
+        "cost_per_1k_tokens": 0.0002,
+        "notes": "Together AI - Affordable open source models"
+      },
+      {
+        "provider": "openai",
+        "model_name": "gpt-4-vision-preview",
+        "api_url": "https://api.openai.com/v1/chat/completions",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": false,
+        "cost_per_1k_tokens": 0.01,
+        "notes": "OpenAI GPT-4 Vision for premium high-accuracy analysis"
+      }
+    ],
+    "use_fallback": true,
+    "quality_threshold": 0.8,
+    "max_retries": 2
+  },
+  "follicle_analysis": {
+    "primary_model": {
+      "provider": "ollama_local",
+      "model_name": "llava:7b",
+      "api_url": "http://localhost:11434/api/generate",
+      "api_key": null,
+      "timeout": 90,
+      "max_tokens": null,
+      "temperature": 0.1,
+      "enabled": true,
+      "cost_per_1k_tokens": 0.0,
+      "notes": "Local LLaVA model via Ollama"
+    },
+    "fallback_models": [
+      {
+        "provider": "groq",
+        "model_name": "llava-v1.5-7b-4096-preview",
+        "api_url": "https://api.groq.com/openai/v1/chat/completions",
+        "api_key": "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",
+        "timeout": 30,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": true,
+        "cost_per_1k_tokens": 0.0,
+        "notes": "Groq - Ultra-fast inference with generous free tier"
+      },
+      {
+        "provider": "openrouter",
+        "model_name": "google/gemini-pro-vision",
+        "api_url": "https://openrouter.ai/api/v1/chat/completions",
+        "api_key": "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",
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": true,
+        "cost_per_1k_tokens": 0.000375,
+        "notes": "OpenRouter - Access to multiple models with free tier"
+      },
+      {
+        "provider": "openai",
+        "model_name": "gpt-4-vision-preview",
+        "api_url": "https://api.openai.com/v1/chat/completions",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": false,
+        "cost_per_1k_tokens": 0.01,
+        "notes": "OpenAI GPT-4 Vision for premium high-accuracy analysis"
+      }
+    ],
+    "use_fallback": true,
+    "quality_threshold": 0.9,
+    "max_retries": 2
+  },
+  "sperm_analysis": {
+    "primary_model": {
+      "provider": "ollama_local",
+      "model_name": "llava:7b",
+      "api_url": "http://localhost:11434/api/generate",
+      "api_key": null,
+      "timeout": 90,
+      "max_tokens": null,
+      "temperature": 0.1,
+      "enabled": true,
+      "cost_per_1k_tokens": 0.0,
+      "notes": "Local LLaVA model via Ollama"
+    },
+    "fallback_models": [
+      {
+        "provider": "openai",
+        "model_name": "gpt-4-vision-preview",
+        "api_url": "https://api.openai.com/v1/chat/completions",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": false,
+        "cost_per_1k_tokens": 0.01,
+        "notes": "OpenAI GPT-4 Vision for premium high-accuracy analysis"
+      }
+    ],
+    "use_fallback": true,
+    "quality_threshold": 0.85,
+    "max_retries": 2
+  },
+  "embryo_analysis": {
+    "primary_model": {
+      "provider": "ollama_local",
+      "model_name": "llava:7b",
+      "api_url": "http://localhost:11434/api/generate",
+      "api_key": null,
+      "timeout": 90,
+      "max_tokens": null,
+      "temperature": 0.1,
+      "enabled": true,
+      "cost_per_1k_tokens": 0.0,
+      "notes": "Local LLaVA model via Ollama"
+    },
+    "fallback_models": [
+      {
+        "provider": "openai",
+        "model_name": "gpt-4-vision-preview",
+        "api_url": "https://api.openai.com/v1/chat/completions",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": false,
+        "cost_per_1k_tokens": 0.01,
+        "notes": "OpenAI GPT-4 Vision for premium high-accuracy analysis"
+      }
+    ],
+    "use_fallback": true,
+    "quality_threshold": 0.9,
+    "max_retries": 2
+  },
+  "oocyte_analysis": {
+    "primary_model": {
+      "provider": "ollama_local",
+      "model_name": "llava:7b",
+      "api_url": "http://localhost:11434/api/generate",
+      "api_key": null,
+      "timeout": 90,
+      "max_tokens": null,
+      "temperature": 0.1,
+      "enabled": true,
+      "cost_per_1k_tokens": 0.0,
+      "notes": "Local LLaVA model via Ollama"
+    },
+    "fallback_models": [
+      {
+        "provider": "openai",
+        "model_name": "gpt-4-vision-preview",
+        "api_url": "https://api.openai.com/v1/chat/completions",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": false,
+        "cost_per_1k_tokens": 0.01,
+        "notes": "OpenAI GPT-4 Vision for premium high-accuracy analysis"
+      }
+    ],
+    "use_fallback": true,
+    "quality_threshold": 0.85,
+    "max_retries": 2
+  },
+  "hysteroscopy_analysis": {
+    "primary_model": {
+      "provider": "ollama_local",
+      "model_name": "llava:7b",
+      "api_url": "http://localhost:11434/api/generate",
+      "api_key": null,
+      "timeout": 90,
+      "max_tokens": null,
+      "temperature": 0.1,
+      "enabled": true,
+      "cost_per_1k_tokens": 0.0,
+      "notes": "Local LLaVA model via Ollama"
+    },
+    "fallback_models": [
+      {
+        "provider": "openai",
+        "model_name": "gpt-4-vision-preview",
+        "api_url": "https://api.openai.com/v1/chat/completions",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": false,
+        "cost_per_1k_tokens": 0.01,
+        "notes": "OpenAI GPT-4 Vision for premium high-accuracy analysis"
+      }
+    ],
+    "use_fallback": true,
+    "quality_threshold": 0.8,
+    "max_retries": 2
+  },
+  "text_generation": {
+    "primary_model": {
+      "provider": "groq",
+      "model_name": "mixtral-8x7b-32768",
+      "api_url": "https://api.groq.com/openai/v1/chat/completions",
+      "api_key": null,
+      "timeout": 30,
+      "max_tokens": 4000,
+      "temperature": 0.1,
+      "enabled": false,
+      "cost_per_1k_tokens": 0.0,
+      "notes": "Groq Mixtral - Ultra-fast text generation, free tier"
+    },
+    "fallback_models": [
+      {
+        "provider": "deepseek",
+        "model_name": "deepseek-chat",
+        "api_url": "https://api.deepseek.com/v1/chat/completions",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": false,
+        "cost_per_1k_tokens": 0.00014,
+        "notes": "DeepSeek - Very affordable high-quality text generation"
+      },
+      {
+        "provider": "ollama_local",
+        "model_name": "llama2:7b",
+        "api_url": "http://localhost:11434/api/generate",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": null,
+        "temperature": 0.1,
+        "enabled": true,
+        "cost_per_1k_tokens": 0.0,
+        "notes": "Local Llama2 via Ollama"
+      },
+      {
+        "provider": "anthropic",
+        "model_name": "claude-3-sonnet-20240229",
+        "api_url": "https://api.anthropic.com/v1/messages",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": 4000,
+        "temperature": 0.1,
+        "enabled": false,
+        "cost_per_1k_tokens": 0.003,
+        "notes": "Anthropic Claude for medical text analysis"
+      }
+    ],
+    "use_fallback": true,
+    "quality_threshold": 0.7,
+    "max_retries": 2
+  },
+  "medical_classification": {
+    "primary_model": {
+      "provider": "anthropic",
+      "model_name": "claude-3-sonnet-20240229",
+      "api_url": "https://api.anthropic.com/v1/messages",
+      "api_key": null,
+      "timeout": 60,
+      "max_tokens": 4000,
+      "temperature": 0.1,
+      "enabled": false,
+      "cost_per_1k_tokens": 0.003,
+      "notes": "Anthropic Claude for medical text analysis"
+    },
+    "fallback_models": [
+      {
+        "provider": "ollama_local",
+        "model_name": "llama2:7b",
+        "api_url": "http://localhost:11434/api/generate",
+        "api_key": null,
+        "timeout": 60,
+        "max_tokens": null,
+        "temperature": 0.1,
+        "enabled": true,
+        "cost_per_1k_tokens": 0.0,
+        "notes": "Local Llama2 via Ollama"
+      }
+    ],
+    "use_fallback": true,
+    "quality_threshold": 0.85,
+    "max_retries": 2
+  }
+}

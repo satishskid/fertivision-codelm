@@ -11,6 +11,15 @@ import datetime
 from dataclasses import dataclass, asdict
 from enum import Enum
 
+# Import new model service
+try:
+    from model_service import service_manager
+    from model_config import AnalysisType
+    MODEL_SERVICE_AVAILABLE = True
+except ImportError:
+    MODEL_SERVICE_AVAILABLE = False
+    print("⚠️ Model service not available, using legacy mode")
+
 class FollicleStage(Enum):
     PRIMORDIAL = "primordial"
     PRIMARY = "primary"
@@ -194,7 +203,7 @@ class UltrasoundAnalyzer:
             """
             
             # Query LLaVA LLM
-            deepseek_result = self._query_deepseek(prompt, base64_image)
+            deepseek_result = self._query_deepseek(prompt, base64_image, "follicle")
 
             if deepseek_result.get("success"):
                 # Parse the AI analysis text and create FollicleAnalysis object
@@ -446,8 +455,68 @@ class UltrasoundAnalyzer:
                 "analysis": ""
             }
 
-    def _query_deepseek(self, prompt: str, base64_image: str) -> Dict:
-        """Query DeepSeek LLM with image and prompt"""
+    def _query_deepseek(self, prompt: str, base64_image: str, analysis_type: str = "vision") -> Dict:
+        """Query DeepSeek LLM and AI models with image and prompt using new model service"""
+
+        # Use new model service if available
+        if MODEL_SERVICE_AVAILABLE:
+            try:
+                # Map analysis type to AnalysisType enum
+                analysis_type_map = {
+                    "follicle": AnalysisType.FOLLICLE_ANALYSIS,
+                    "sperm": AnalysisType.SPERM_ANALYSIS,
+                    "embryo": AnalysisType.EMBRYO_ANALYSIS,
+                    "oocyte": AnalysisType.OOCYTE_ANALYSIS,
+                    "hysteroscopy": AnalysisType.HYSTEROSCOPY_ANALYSIS,
+                    "vision": AnalysisType.VISION_ANALYSIS
+                }
+
+                analysis_enum = analysis_type_map.get(analysis_type, AnalysisType.VISION_ANALYSIS)
+
+                # Create temporary image file for model service
+                import tempfile
+                with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as tmp_file:
+                    # Decode base64 image and save
+                    image_data = base64.b64decode(base64_image)
+                    tmp_file.write(image_data)
+                    tmp_file_path = tmp_file.name
+
+                try:
+                    # Call model service
+                    response = service_manager.analyze_with_model(
+                        analysis_type=analysis_enum,
+                        prompt=prompt,
+                        image_path=tmp_file_path
+                    )
+
+                    if response.success:
+                        return {
+                            "success": True,
+                            "analysis": response.response,
+                            "provider": response.provider.value,
+                            "model": response.model_name,
+                            "processing_time": response.processing_time,
+                            "cost": response.cost,
+                            "quality_score": response.quality_score
+                        }
+                    else:
+                        return {
+                            "success": False,
+                            "error": response.error,
+                            "analysis": ""
+                        }
+                finally:
+                    # Clean up temporary file
+                    try:
+                        os.unlink(tmp_file_path)
+                    except:
+                        pass
+
+            except Exception as e:
+                print(f"⚠️ Model service error, falling back to legacy mode: {e}")
+                # Fall through to legacy mode
+
+        # Legacy mode - direct Ollama call
         try:
             payload = {
                 "model": "llava:7b",  # Changed to llava for vision support
@@ -455,20 +524,21 @@ class UltrasoundAnalyzer:
                 "images": [base64_image],
                 "stream": False
             }
-            
+
             response = requests.post(
                 self.deepseek_url,
                 json=payload,
                 headers={"Content-Type": "application/json"},
                 timeout=60  # Longer timeout for complex analysis
             )
-            
+
             if response.status_code == 200:
                 result = response.json()
                 return {
                     "success": True,
                     "analysis": result.get("response", ""),
-                    "model": "llava"
+                    "provider": "ollama_local",
+                    "model": "llava:7b"
                 }
             else:
                 return {
@@ -476,7 +546,7 @@ class UltrasoundAnalyzer:
                     "error": f"API Error: {response.status_code}",
                     "analysis": ""
                 }
-                
+
         except requests.exceptions.ConnectionError:
             return {
                 "success": False,
