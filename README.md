@@ -37,6 +37,14 @@ FertiVision is a comprehensive AI-powered medical imaging analysis platform spec
 - **Performance Metrics**: Real-time accuracy and processing statistics
 - **Sample Image Library**: Curated medical images for testing and validation
 
+### 🔌 **API/SDK for IVF EMR Integration**
+- **RESTful API Server**: Secure endpoints for medical image analysis
+- **Python SDK**: Easy integration library for EMR systems
+- **Batch Processing**: Handle multiple analyses efficiently
+- **Clinical Reports**: Professional medical documentation with PDF export
+- **Authentication & Security**: API key management with rate limiting
+- **HIPAA Compliance**: Secure data handling and audit logging
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -66,7 +74,19 @@ python app.py
 
 4. **Open your browser**
 ```
-http://localhost:5002
+Main Application: http://localhost:5002
+API Server: http://localhost:5003
+```
+
+### API Server Setup
+
+For IVF EMR integration, also start the API server:
+
+```bash
+# Start API server (separate terminal)
+python api_server.py
+
+# API will be available at: http://localhost:5003
 ```
 
 ## 🔧 Configuration
@@ -107,6 +127,7 @@ http://localhost:5002
 - **📸 Sample Images**: Download curated test images
 - **📚 Training**: Comprehensive user guide and tutorials
 - **⚙️ Settings**: API configuration and system preferences
+- **🔌 API Integration**: RESTful API for EMR system integration
 
 ## 🔬 Medical Standards Compliance
 
@@ -146,36 +167,145 @@ http://localhost:5002
 - **HIPAA Considerations**: Privacy-focused design
 - **Data Isolation**: No data sharing with external services in mock mode
 
+## 🔌 API/SDK for IVF EMR Integration
+
+FertiVision provides a comprehensive API and SDK for seamless integration with IVF Electronic Medical Record (EMR) systems.
+
+### 🚀 Quick API Start
+
+**Start the API Server:**
+```bash
+python api_server.py
+# API available at: http://localhost:5003
+```
+
+**API Documentation:** http://localhost:5003
+**Interactive Testing:** http://localhost:5003/test
+
+### 🔑 Authentication
+
+Use API keys for secure access:
+```bash
+# Demo API Key (for testing)
+X-API-Key: fv_demo_key_12345
+
+# Example API call
+curl -H "X-API-Key: fv_demo_key_12345" \
+     -F "image=@sperm_sample.jpg" \
+     -F "patient_id=P12345" \
+     http://localhost:5003/api/v1/analyze/sperm
+```
+
+### 🐍 Python SDK Integration
+
+**Installation:**
+```bash
+# Copy fertivision_sdk.py to your project
+from fertivision_sdk import FertiVisionClient
+```
+
+**Simple Integration:**
+```python
+from fertivision_sdk import FertiVisionClient
+
+# Initialize client
+client = FertiVisionClient(
+    api_key="fv_demo_key_12345",
+    base_url="http://localhost:5003"
+)
+
+# Analyze sperm sample
+result = client.analyze_sperm(
+    image_path="sperm_image.jpg",
+    patient_id="P12345",
+    case_id="C001",
+    notes="Day 0 sperm analysis"
+)
+
+print(f"Classification: {result.classification}")
+print(f"Concentration: {result.concentration} M/ml")
+print(f"Motility: {result.progressive_motility}%")
+```
+
+**Batch Processing:**
+```python
+# Process multiple analyses for complete IVF cycle
+analyses = [
+    AnalysisRequest(patient, "sperm_image.jpg", "sperm", "C001"),
+    AnalysisRequest(patient, "embryo_image.jpg", "embryo", "C002", day=3),
+    AnalysisRequest(patient, "follicle_scan.jpg", "follicle", "C003")
+]
+
+cycle_results = emr.batch_process_cycle(patient, analyses)
+```
+
+### 📋 Available API Endpoints
+
+- **POST** `/api/v1/analyze/sperm` - WHO 2021 compliant sperm analysis
+- **POST** `/api/v1/analyze/oocyte` - ESHRE guidelines oocyte assessment
+- **POST** `/api/v1/analyze/embryo` - Gardner grading embryo evaluation
+- **POST** `/api/v1/analyze/follicle` - AFC and ovarian reserve assessment
+- **POST** `/api/v1/analyze/hysteroscopy` - Endometrial pathology analysis
+- **POST** `/api/v1/analyze/batch` - Multiple image batch processing
+- **GET** `/api/v1/report/{id}` - Detailed analysis reports
+- **GET** `/api/v1/export/pdf/{id}` - PDF report generation
+
+### 🏥 EMR Integration Benefits
+
+**✅ Seamless Workflow Integration:**
+- Direct API calls from EMR systems
+- Automatic result integration into patient records
+- Professional medical reports with clinical correlations
+- Batch processing for high-volume clinics
+
+**✅ Clinical Standards Compliance:**
+- WHO 2021 guidelines for sperm analysis
+- ESHRE guidelines for oocyte/embryo assessment
+- Gardner grading system for embryo evaluation
+- Evidence-based clinical recommendations
+
+**✅ Security & Compliance:**
+- API key authentication and rate limiting
+- HIPAA-compliant data handling
+- Secure file processing and storage
+- Comprehensive audit logging
+
 ## 📊 Sample Analysis Results
 
 ### Sperm Analysis Example
-```
-Classification: Normozoospermia
-Technical Details:
-- Concentration: 45.0 × 10⁶/ml (Ref: >15)
-- Progressive Motility: 65% (Ref: >32%)
-- Normal Morphology: 8% (Ref: >4%)
-- Volume: 3.0ml (Ref: >1.5ml)
-
-Clinical Recommendations:
-- Excellent fertility potential
-- Suitable for all ART procedures
-- Natural conception likely
+```json
+{
+  "classification": "Normozoospermia",
+  "parameters": {
+    "concentration": 45.0,
+    "progressive_motility": 65.0,
+    "normal_morphology": 8.0,
+    "volume": 3.0
+  },
+  "clinical_recommendations": [
+    "Excellent fertility potential",
+    "Suitable for all ART procedures",
+    "Natural conception likely"
+  ]
+}
 ```
 
 ### Embryo Grading Example
-```
-Classification: Grade A Embryo - Excellent Quality
-Technical Details:
-- Developmental Stage: Day 3 (72 hours)
-- Cell Count: 8 cells (optimal)
-- Fragmentation: <5% (minimal)
-- Implantation Potential: High (>60%)
-
-Clinical Recommendations:
-- Excellent transfer candidate
-- High implantation probability
-- Consider single embryo transfer
+```json
+{
+  "classification": "Grade A Embryo - Excellent Quality",
+  "parameters": {
+    "day": 3,
+    "cell_count": 8,
+    "fragmentation": 5.0,
+    "grade": "A"
+  },
+  "clinical_recommendations": [
+    "Excellent transfer candidate",
+    "High implantation probability",
+    "Consider single embryo transfer"
+  ]
+}
 ```
 
 ## 🧪 Testing & Validation
@@ -208,12 +338,41 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 FertiVision is designed for educational and research purposes. All analysis results should be validated by qualified medical professionals. This system is not intended for direct clinical diagnosis or treatment decisions.
 
+## 📁 Project Structure
+
+```
+fertivision-codelm/
+├── app.py                          # Main web application
+├── api_server.py                   # RESTful API server for EMR integration
+├── fertivision_sdk.py              # Python SDK for easy integration
+├── config.py                       # Configuration management
+├── enhanced_reproductive_system.py # Core analysis engine
+├── model_config.py                 # AI model configuration
+├── ultrasound_analysis.py          # Ultrasound analysis capabilities
+├── templates/
+│   ├── enhanced_index.html         # Main web interface
+│   └── model_config.html           # Model configuration interface
+├── examples/
+│   └── emr_integration_example.py  # Complete EMR integration example
+├── API_DOCUMENTATION.md            # Comprehensive API documentation
+├── test_api.py                     # API testing script
+├── requirements.txt                # Main application dependencies
+├── requirements_api.txt            # API/SDK dependencies
+└── README.md                       # This file
+```
+
 ## 📞 Support
 
-For technical support, feature requests, or collaboration opportunities:
+### Technical Support
 - **Email**: support@greybrain.ai
 - **GitHub Issues**: [Report bugs or request features](https://github.com/satishskid/fertivision-codelm/issues)
-- **Documentation**: [Comprehensive guides and tutorials](https://github.com/satishskid/fertivision-codelm/wiki)
+- **API Documentation**: [Complete API reference](API_DOCUMENTATION.md)
+
+### Integration Assistance
+- **EMR Integration**: Custom integration consulting for IVF clinics
+- **API Support**: Technical assistance for API implementation
+- **Training**: User training and best practices workshops
+- **Custom Development**: Tailored solutions for specific requirements
 
 ---
 
