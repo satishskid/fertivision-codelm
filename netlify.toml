@@ -1,5 +1,6 @@
 # Netlify Configuration for FertiVision
 [build]
+  # Static site deployment
   publish = "."
 
 # SPA redirect
