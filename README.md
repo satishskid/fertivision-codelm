@@ -47,46 +47,61 @@ FertiVision is a comprehensive AI-powered medical imaging analysis platform spec
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.8+
-- Flask
-- OpenCV
-- PIL (Pillow)
-- SQLite3
+### 🌐 **Production Deployment (Netlify)**
 
-### Installation
+**Live Demo**: [fertivision.netlify.app](https://fertivision.netlify.app) *(coming soon)*
 
-1. **Clone the repository**
+#### One-Click Deploy to Netlify
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/satishskid/fertivision-codelm&branch=netlify-deployment)
+
+#### Manual Netlify Deployment
+
+1. **Fork the repository**
+2. **Switch to netlify-deployment branch**
+3. **Connect to Netlify**
+4. **Configure environment variables** (optional - demo mode works without API keys)
+5. **Deploy!**
+
+See [NETLIFY_DEPLOYMENT.md](NETLIFY_DEPLOYMENT.md) for detailed instructions.
+
+### 🖥️ **Local Development**
+
+#### Prerequisites
+- Python 3.8+ (for local Flask development)
+- Modern web browser
+- Git
+
+#### Option 1: Static Frontend (Netlify-compatible)
+
 ```bash
+# Clone and switch to deployment branch
 git clone https://github.com/satishskid/fertivision-codelm.git
 cd fertivision-codelm
+git checkout netlify-deployment
+
+# Serve static files
+python -m http.server 8000
+# Open http://localhost:8000
 ```
 
-2. **Install dependencies**
+#### Option 2: Full Flask Application
+
 ```bash
+# Clone main branch
+git clone https://github.com/satishskid/fertivision-codelm.git
+cd fertivision-codelm
+
+# Install dependencies
 pip install -r requirements.txt
-```
 
-3. **Run the application**
-```bash
+# Run Flask application
 python app.py
-```
+# Open http://localhost:5002
 
-4. **Open your browser**
-```
-Main Application: http://localhost:5002
-API Server: http://localhost:5003
-```
-
-### API Server Setup
-
-For IVF EMR integration, also start the API server:
-
-```bash
-# Start API server (separate terminal)
+# Run API server (separate terminal)
 python api_server.py
-
-# API will be available at: http://localhost:5003
+# API available at http://localhost:5003
 ```
 
 ## 🔧 Configuration
