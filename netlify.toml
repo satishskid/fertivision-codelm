@@ -1,6 +1,5 @@
 [build]
-  base = "fertivision-cloud-production"
-  publish = "fertivision-cloud-production/.next"
+  publish = ".next"
   command = "npm run build"
   ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ."
 
