@@ -89,54 +89,78 @@ export default function Analysis() {
 
     setIsAnalyzing(true);
     setResults([]);
-
+    
     try {
       const analysisResults: AnalysisResult[] = [];
-
+      
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('analysis_type', analysisType);
+        formData.append('patient_id', patientId || `AUTO_${Date.now()}`);
+        formData.append('case_id', caseId || `CASE_${Date.now()}`);
+        formData.append('additional_notes', additionalNotes);
 
         toast.loading(`Analyzing ${file.name}... (${i + 1}/${selectedFiles.length})`, {
           id: `analysis-${i}`
         });
 
-        // Simulate analysis with mock data for static deployment
-        await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 3000));
+        try {
+          const response = await fetch(`/api/analyze/${analysisType}`, {
+            method: 'POST',
+            body: formData,
+          });
 
-        const mockResult = {
-          success: true,
-          analysis_id: `DEMO_${Date.now()}_${i}`,
-          classification: `${analysisType.charAt(0).toUpperCase() + analysisType.slice(1)} analysis completed`,
-          confidence: Math.floor(85 + Math.random() * 15),
-          parameters: {
-            'sample_quality': 'Good',
-            'image_resolution': '1920x1080',
-            'analysis_method': 'AI Deep Learning'
-          },
-          technical_details: {
-            'Model': 'FertiVision AI v2.1',
-            'Processing_Time': `${(2 + Math.random() * 3).toFixed(1)}s`,
-            'Confidence_Score': `${Math.floor(85 + Math.random() * 15)}%`
-          },
-          clinical_recommendations: [
-            'Analysis completed successfully',
-            'Results are for demonstration purposes',
-            'Contact support for production analysis'
-          ],
-          processing_time: parseFloat((2 + Math.random() * 3).toFixed(1))
-        };
-
-        analysisResults.push(mockResult);
-        toast.success(`${file.name} analyzed successfully`, {
-          id: `analysis-${i}`
-        });
+          const result = await response.json();
+          
+          if (response.ok && result.success) {
+            analysisResults.push(result);
+            toast.success(`${file.name} analyzed successfully`, {
+              id: `analysis-${i}`
+            });
+          } else {
+            toast.error(`Failed to analyze ${file.name}: ${result.error || 'Unknown error'}`, {
+              id: `analysis-${i}`
+            });
+            analysisResults.push({
+              success: false,
+              analysis_id: `failed_${Date.now()}`,
+              classification: 'Analysis failed',
+              confidence: 0,
+              parameters: {},
+              technical_details: { 'Error': result.error || 'Unknown error' },
+              clinical_recommendations: ['Please try again or contact support'],
+              processing_time: 0,
+              error: result.error || 'Unknown error'
+            });
+          }
+        } catch (error) {
+          toast.error(`Network error analyzing ${file.name}`, {
+            id: `analysis-${i}`
+          });
+          analysisResults.push({
+            success: false,
+            analysis_id: `error_${Date.now()}`,
+            classification: 'Network error',
+            confidence: 0,
+            parameters: {},
+            technical_details: { 'Error': 'Network error occurred' },
+            clinical_recommendations: ['Please check your connection and try again'],
+            processing_time: 0,
+            error: 'Network error'
+          });
+        }
       }
 
       setResults(analysisResults);
       setShowResults(true);
-
-      toast.success(`Demo analysis complete! ${analysisResults.length}/${selectedFiles.length} files processed`);
-
+      
+      const successCount = analysisResults.filter(r => r.success).length;
+      if (successCount > 0) {
+        toast.success(`Analysis complete! ${successCount}/${selectedFiles.length} files processed successfully`);
+      }
+      
     } catch (error) {
       toast.error('Failed to perform analysis');
       console.error('Analysis error:', error);
