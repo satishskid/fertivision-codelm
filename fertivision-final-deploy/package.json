@@ -1,0 +1,100 @@
+{
+  "name": "fertivision",
+  "version": "1.0.0",
+  "description": "AI-Enhanced Reproductive Medicine Analysis Platform",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'FertiVision static build complete'",
+    "start": "echo 'FertiVision ready for deployment'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/satishskid/fertivision-codelm.git",
+    "branch": "netlify-deployment"
+  },
+  "keywords": [
+    "fertility",
+    "IVF",
+    "AI",
+    "reproductive-medicine",
+    "sperm-analysis",
+    "embryo-grading",
+    "medical-imaging",
+    "healthcare",
+    "machine-learning",
+    "computer-vision"
+  ],
+  "author": {
+    "name": "greybrain.ai",
+    "email": "support@greybrain.ai",
+    "url": "https://greybrain.ai"
+  },
+  "license": "MIT",
+  "homepage": "https://fertivision.netlify.app",
+  "bugs": {
+    "url": "https://github.com/satishskid/fertivision-codelm/issues"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {},
+  "files": [
+    "index.html",
+    "static/",
+    "netlify.toml",
+    "README.md",
+    "NETLIFY_DEPLOYMENT.md"
+  ],
+  "config": {
+    "port": 8000,
+    "host": "localhost"
+  },
+  "netlify": {
+    "build": {
+      "command": "npm run build",
+      "publish": "."
+    },
+    "redirects": [
+      {
+        "from": "/*",
+        "to": "/index.html",
+        "status": 200
+      }
+    ],
+    "headers": [
+      {
+        "for": "/*",
+        "values": {
+          "X-Frame-Options": "DENY",
+          "X-XSS-Protection": "1; mode=block",
+          "X-Content-Type-Options": "nosniff"
+        }
+      }
+    ]
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/satishskid"
+  },
+  "contributors": [
+    {
+      "name": "Satish",
+      "email": "satish@skids.health",
+      "url": "https://github.com/satishskid"
+    }
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  }
+}

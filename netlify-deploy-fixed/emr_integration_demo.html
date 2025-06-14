@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FertiVision EMR Integration Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .card { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 30px; border-radius: 8px; margin-bottom: 20px; }
+        .api-section { border-left: 4px solid #10b981; }
+        .demo-section { border-left: 4px solid #3b82f6; }
+        .result-section { border-left: 4px solid #f59e0b; }
+        button { background: #10b981; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #059669; }
+        button.secondary { background: #6b7280; }
+        button.secondary:hover { background: #4b5563; }
+        .code-block { background: #1f2937; color: #f9fafb; padding: 15px; border-radius: 5px; font-family: monospace; overflow-x: auto; margin: 10px 0; }
+        .result { background: #f8fafc; padding: 15px; border-radius: 5px; margin: 10px 0; font-family: monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+        .success { border-left: 4px solid #10b981; background: #ecfdf5; }
+        .error { border-left: 4px solid #ef4444; background: #fef2f2; }
+        .info { border-left: 4px solid #3b82f6; background: #eff6ff; }
+        input[type="file"] { margin: 10px 0; padding: 5px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .api-key { background: #fef3c7; padding: 10px; border-radius: 5px; margin: 10px 0; font-family: monospace; }
+        h1, h2, h3 { margin-top: 0; }
+        .endpoint { background: #f1f5f9; padding: 10px; margin: 5px 0; border-radius: 4px; font-family: monospace; }
+        .method { background: #10b981; color: white; padding: 2px 6px; border-radius: 3px; font-size: 12px; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 FertiVision EMR Integration Demo</h1>
+            <p>Complete API integration for IVF Electronic Medical Records</p>
+        </div>
+
+        <div class="grid">
+            <div class="card api-section">
+                <h2>🔌 API Server Status</h2>
+                <p>Test the FertiVision API server connection and authentication:</p>
+                <button onclick="testConnection()">Test Connection</button>
+                <button onclick="testAuthentication()">Test Authentication</button>
+                <button onclick="getAPIInfo()">Get API Info</button>
+                <div id="connection-result" class="result"></div>
+            </div>
+
+            <div class="card demo-section">
+                <h2>🧬 Analysis Demo</h2>
+                <p>Upload medical images for AI analysis:</p>
+                <input type="file" id="imageFile" accept="image/*">
+                <br>
+                <button onclick="analyzeSperm()">Sperm Analysis</button>
+                <button onclick="analyzeFollicle()">Follicle Analysis</button>
+                <button onclick="analyzeEmbryo()">Embryo Analysis</button>
+                <div id="analysis-result" class="result"></div>
+            </div>
+        </div>
+
+        <div class="card result-section">
+            <h2>📊 EMR Integration Examples</h2>
+            
+            <h3>🐍 Python SDK Example</h3>
+            <div class="code-block">from fertivision_sdk import FertiVisionClient
+
+# Initialize client with API key
+client = FertiVisionClient(
+    api_key="fv_demo_key_12345",
+    base_url="http://localhost:5004"
+)
+
+# Analyze sperm sample
+result = client.analyze_sperm(
+    "sperm_image.jpg",
+    patient_id="P12345",
+    case_id="C001"
+)
+
+print(f"Classification: {result.classification}")
+print(f"Confidence: {result.confidence}%")
+print(f"WHO Parameters: {result.parameters}")
+</div>
+
+            <h3>🌐 REST API Example</h3>
+            <div class="code-block">curl -X POST \
+  http://localhost:5004/api/v1/analyze/sperm \
+  -H 'X-API-Key: fv_demo_key_12345' \
+  -F 'image=@sperm_sample.jpg' \
+  -F 'patient_id=P12345' \
+  -F 'case_id=C001' \
+  -F 'notes=Day 0 sperm analysis'
+</div>
+
+            <h3>📋 Available Endpoints</h3>
+            <div class="endpoint">
+                <span class="method">POST</span>/api/v1/analyze/sperm - WHO 2021 sperm analysis
+            </div>
+            <div class="endpoint">
+                <span class="method">POST</span>/api/v1/analyze/oocyte - ESHRE oocyte assessment
+            </div>
+            <div class="endpoint">
+                <span class="method">POST</span>/api/v1/analyze/embryo - Gardner embryo grading
+            </div>
+            <div class="endpoint">
+                <span class="method">POST</span>/api/v1/analyze/follicle - AFC ovarian reserve
+            </div>
+            <div class="endpoint">
+                <span class="method">POST</span>/api/v1/analyze/hysteroscopy - Endometrial analysis
+            </div>
+            <div class="endpoint">
+                <span class="method">POST</span>/api/v1/analyze/batch - Batch processing
+            </div>
+        </div>
+
+        <div class="card info">
+            <h2>🔑 Authentication</h2>
+            <div class="api-key">
+                <strong>Demo API Key:</strong> fv_demo_key_12345<br>
+                <strong>Usage:</strong> Add header X-API-Key: fv_demo_key_12345
+            </div>
+            <p><strong>Features:</strong></p>
+            <ul>
+                <li>✅ Secure API key authentication</li>
+                <li>✅ Rate limiting (1000 requests/hour for demo)</li>
+                <li>✅ Permission-based access control</li>
+                <li>✅ Audit logging for compliance</li>
+                <li>✅ HIPAA-compliant data handling</li>
+            </ul>
+        </div>
+
+        <div class="card success">
+            <h2>🎯 Integration Benefits</h2>
+            <ul>
+                <li><strong>Seamless EMR Integration:</strong> RESTful API with standardized medical data exchange</li>
+                <li><strong>Real-time Analysis:</strong> Instant AI-powered analysis results</li>
+                <li><strong>Batch Processing:</strong> Handle multiple images simultaneously</li>
+                <li><strong>Comprehensive Reports:</strong> WHO/ESHRE compliant analysis reports</li>
+                <li><strong>Scalable Architecture:</strong> Handle high-volume clinical workflows</li>
+                <li><strong>Security First:</strong> Enterprise-grade security and compliance</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'fv_demo_key_12345';
+        const BASE_URL = 'http://localhost:5004/api/v1';
+
+        function showResult(elementId, data, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.className = `result ${type}`;
+            element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        }
+
+        async function testConnection() {
+            try {
+                const response = await fetch(`${BASE_URL}/health`);
+                const data = await response.json();
+                showResult('connection-result', data, 'success');
+            } catch (error) {
+                showResult('connection-result', `Connection failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAuthentication() {
+            try {
+                const response = await fetch(`${BASE_URL}/info`, {
+                    headers: { 'X-API-Key': 'invalid_key' }
+                });
+                const data = await response.json();
+                showResult('connection-result', data, response.ok ? 'success' : 'error');
+            } catch (error) {
+                showResult('connection-result', `Auth test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function getAPIInfo() {
+            try {
+                const response = await fetch(`${BASE_URL}/info`, {
+                    headers: { 'X-API-Key': API_KEY }
+                });
+                const data = await response.json();
+                showResult('connection-result', data, 'success');
+            } catch (error) {
+                showResult('connection-result', `API info failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function performAnalysis(analysisType) {
+            const fileInput = document.getElementById('imageFile');
+            
+            // Create mock data if no file selected
+            const formData = new FormData();
+            if (fileInput.files[0]) {
+                formData.append('image', fileInput.files[0]);
+            } else {
+                // Create mock image for demo
+                formData.append('image', new Blob(['mock image data'], {type: 'image/jpeg'}), 'mock.jpg');
+            }
+            
+            formData.append('patient_id', 'EMR_P001');
+            formData.append('case_id', 'EMR_C001');
+            formData.append('notes', `EMR integration demo - ${analysisType} analysis`);
+            
+            if (analysisType === 'embryo') {
+                formData.append('day', '3');
+            }
+
+            try {
+                const response = await fetch(`${BASE_URL}/analyze/${analysisType}`, {
+                    method: 'POST',
+                    headers: { 'X-API-Key': API_KEY },
+                    body: formData
+                });
+                const data = await response.json();
+                showResult('analysis-result', data, response.ok ? 'success' : 'error');
+            } catch (error) {
+                showResult('analysis-result', `Analysis failed: ${error.message}`, 'error');
+            }
+        }
+
+        function analyzeSperm() { performAnalysis('sperm'); }
+        function analyzeFollicle() { performAnalysis('follicle'); }
+        function analyzeEmbryo() { performAnalysis('embryo'); }
+
+        // Auto-test connection on page load
+        window.addEventListener('load', () => {
+            setTimeout(testConnection, 1000);
+        });
+    </script>
+</body>
+</html>

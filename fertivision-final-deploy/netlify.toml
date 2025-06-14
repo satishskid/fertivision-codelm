@@ -1,0 +1,8 @@
+# Minimal Netlify Configuration - Static Site Only
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FertiVision Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔬 FertiVision Test Page</h1>
+    
+    <div class="test-section">
+        <h2>Tab Navigation Test</h2>
+        <button onclick="testTabNavigation()">Test All Tabs</button>
+        <div id="tab-test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Demo Data Test</h2>
+        <button onclick="testDemoData()">Test Demo Data</button>
+        <div id="demo-test-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Module Loading Test</h2>
+        <button onclick="testModules()">Test Module Loading</button>
+        <div id="module-test-results"></div>
+    </div>
+
+    <!-- Load FertiVision modules -->
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/analysis.js"></script>
+    <script src="/static/js/demos.js"></script>
+    <script src="/static/js/ui.js"></script>
+    <script src="/static/js/main.js"></script>
+
+    <script>
+        function testTabNavigation() {
+            const results = document.getElementById('tab-test-results');
+            const tabs = ['sperm', 'oocyte', 'embryo', 'follicle', 'hysteroscopy', 'datasets', 'training'];
+            let output = '<h3>Tab Navigation Results:</h3>';
+            
+            tabs.forEach(tab => {
+                const tabBtn = document.querySelector(`[data-tab="${tab}"]`);
+                const tabContent = document.getElementById(`${tab}-tab`);
+                
+                if (tabBtn && tabContent) {
+                    output += `<div class="success">✅ ${tab}: Tab button and content found</div>`;
+                } else {
+                    output += `<div class="error">❌ ${tab}: Missing ${!tabBtn ? 'button' : ''} ${!tabContent ? 'content' : ''}</div>`;
+                }
+            });
+            
+            results.innerHTML = output;
+        }
+        
+        function testDemoData() {
+            const results = document.getElementById('demo-test-results');
+            const analysisTypes = ['sperm', 'oocyte', 'embryo', 'follicle', 'hysteroscopy'];
+            let output = '<h3>Demo Data Results:</h3>';
+            
+            if (window.FertiVisionConfig) {
+                analysisTypes.forEach(type => {
+                    try {
+                        const demoData = window.FertiVisionConfig.getDemoData(type);
+                        if (demoData && demoData.classification) {
+                            output += `<div class="success">✅ ${type}: ${demoData.classification}</div>`;
+                        } else {
+                            output += `<div class="error">❌ ${type}: No demo data found</div>`;
+                        }
+                    } catch (error) {
+                        output += `<div class="error">❌ ${type}: Error - ${error.message}</div>`;
+                    }
+                });
+            } else {
+                output += '<div class="error">❌ FertiVisionConfig not loaded</div>';
+            }
+            
+            results.innerHTML = output;
+        }
+        
+        function testModules() {
+            const results = document.getElementById('module-test-results');
+            const modules = ['FertiVisionConfig', 'FertiVisionAPI', 'FertiVisionAnalysis', 'FertiVisionDemos', 'FertiVisionUI'];
+            let output = '<h3>Module Loading Results:</h3>';
+            
+            modules.forEach(module => {
+                if (window[module]) {
+                    output += `<div class="success">✅ ${module}: Loaded</div>`;
+                } else {
+                    output += `<div class="error">❌ ${module}: Not loaded</div>`;
+                }
+            });
+            
+            results.innerHTML = output;
+        }
+        
+        // Auto-run tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testModules();
+                testDemoData();
+                testTabNavigation();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
