@@ -6,8 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/fertivision-codelm/' : '',
-  basePath: process.env.NODE_ENV === 'production' ? '/fertivision-codelm' : '',
+  // Remove assetPrefix and basePath for Netlify deployment
 };
 
 export default nextConfig;
