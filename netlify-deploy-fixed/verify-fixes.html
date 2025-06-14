@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FertiVision Fix Verification</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .test-card { background: white; margin: 15px 0; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .success { border-left: 4px solid #28a745; }
+        .error { border-left: 4px solid #dc3545; }
+        .warning { border-left: 4px solid #ffc107; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 4px; }
+        .test-result.pass { background: #d4edda; color: #155724; }
+        .test-result.fail { background: #f8d7da; color: #721c24; }
+        button { padding: 8px 16px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow: auto; font-size: 12px; }
+        h1 { color: #333; text-align: center; }
+        h2 { color: #666; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 FertiVision Fix Verification</h1>
+        <p style="text-align: center; color: #666;">Testing follicle analysis and hysteroscopy tab fixes</p>
+
+        <div class="test-card">
+            <h2>🧪 Demo Data Test</h2>
+            <button class="btn-primary" onclick="testDemoData()">Test Demo Data</button>
+            <div id="demo-data-results"></div>
+        </div>
+
+        <div class="test-card">
+            <h2>🎯 Follicle Analysis Test</h2>
+            <button class="btn-primary" onclick="testFollicleAnalysis()">Test Follicle Analysis</button>
+            <div id="follicle-test-results"></div>
+        </div>
+
+        <div class="test-card">
+            <h2>🏥 Hysteroscopy Analysis Test</h2>
+            <button class="btn-primary" onclick="testHysteroscopyAnalysis()">Test Hysteroscopy Analysis</button>
+            <div id="hysteroscopy-test-results"></div>
+        </div>
+
+        <div class="test-card">
+            <h2>📊 Tab Navigation Test</h2>
+            <button class="btn-primary" onclick="testTabNavigation()">Test All Tabs</button>
+            <div id="tab-test-results"></div>
+        </div>
+
+        <div class="test-card">
+            <h2>🎬 Demo Functionality Test</h2>
+            <button class="btn-primary" onclick="testDemoFunctionality()">Test Demo Functions</button>
+            <div id="demo-func-results"></div>
+        </div>
+    </div>
+
+    <!-- Load FertiVision modules -->
+    <script src="/static/js/config.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/analysis.js"></script>
+    <script src="/static/js/demos.js"></script>
+    <script src="/static/js/ui.js"></script>
+    <script src="/static/js/main.js"></script>
+
+    <script>
+        function showResult(containerId, title, success, message, details = null) {
+            const container = document.getElementById(containerId);
+            const resultClass = success ? 'pass' : 'fail';
+            const icon = success ? '✅' : '❌';
+            
+            let html = `<div class="test-result ${resultClass}">
+                <strong>${icon} ${title}</strong><br>
+                ${message}
+            </div>`;
+            
+            if (details) {
+                html += `<pre>${JSON.stringify(details, null, 2)}</pre>`;
+            }
+            
+            container.innerHTML += html;
+        }
+
+        function testDemoData() {
+            const container = document.getElementById('demo-data-results');
+            container.innerHTML = '<h3>Testing Demo Data...</h3>';
+            
+            const analysisTypes = ['sperm', 'oocyte', 'embryo', 'follicle', 'hysteroscopy'];
+            
+            analysisTypes.forEach(type => {
+                try {
+                    if (window.FertiVisionConfig) {
+                        const demoData = window.FertiVisionConfig.getDemoData(type);
+                        
+                        if (demoData && demoData.classification) {
+                            showResult('demo-data-results', 
+                                `${type.charAt(0).toUpperCase() + type.slice(1)} Demo Data`, 
+                                true, 
+                                `Classification: ${demoData.classification}`,
+                                { confidence: demoData.confidence, analysis: demoData.analysis.substring(0, 100) + '...' }
+                            );
+                        } else {
+                            showResult('demo-data-results', 
+                                `${type.charAt(0).toUpperCase() + type.slice(1)} Demo Data`, 
+                                false, 
+                                'No demo data found or missing classification'
+                            );
+                        }
+                    } else {
+                        showResult('demo-data-results', 'Config Module', false, 'FertiVisionConfig not loaded');
+                    }
+                } catch (error) {
+                    showResult('demo-data-results', 
+                        `${type.charAt(0).toUpperCase() + type.slice(1)} Demo Data`, 
+                        false, 
+                        `Error: ${error.message}`
+                    );
+                }
+            });
+        }
+
+        function testFollicleAnalysis() {
+            const container = document.getElementById('follicle-test-results');
+            container.innerHTML = '<h3>Testing Follicle Analysis...</h3>';
+            
+            try {
+                if (window.FertiVisionConfig) {
+                    const follicleData = window.FertiVisionConfig.getDemoData('follicle');
+                    
+                    // Check if it's actually follicle data and not sperm data
+                    const isCorrectData = follicleData.classification !== 'Normozoospermia' && 
+                                         follicleData.classification.toLowerCase().includes('ovarian') ||
+                                         follicleData.classification.toLowerCase().includes('follicle') ||
+                                         follicleData.classification.toLowerCase().includes('reserve');
+                    
+                    if (isCorrectData) {
+                        showResult('follicle-test-results', 
+                            'Follicle Analysis Data', 
+                            true, 
+                            `Correct follicle data returned: ${follicleData.classification}`,
+                            {
+                                confidence: follicleData.confidence,
+                                parameters: follicleData.parameters,
+                                technicalDetails: Object.keys(follicleData.technicalDetails || {}).slice(0, 3)
+                            }
+                        );
+                    } else {
+                        showResult('follicle-test-results', 
+                            'Follicle Analysis Data', 
+                            false, 
+                            `Wrong data type returned: ${follicleData.classification} (appears to be sperm data)`
+                        );
+                    }
+                } else {
+                    showResult('follicle-test-results', 'Config Module', false, 'FertiVisionConfig not loaded');
+                }
+            } catch (error) {
+                showResult('follicle-test-results', 'Follicle Analysis', false, `Error: ${error.message}`);
+            }
+        }
+
+        function testHysteroscopyAnalysis() {
+            const container = document.getElementById('hysteroscopy-test-results');
+            container.innerHTML = '<h3>Testing Hysteroscopy Analysis...</h3>';
+            
+            try {
+                if (window.FertiVisionConfig) {
+                    const hysteroscopyData = window.FertiVisionConfig.getDemoData('hysteroscopy');
+                    
+                    // Check if it's actually hysteroscopy data
+                    const isCorrectData = hysteroscopyData.classification !== 'Normozoospermia' && 
+                                         (hysteroscopyData.classification.toLowerCase().includes('endometrial') ||
+                                          hysteroscopyData.classification.toLowerCase().includes('hysteroscopy') ||
+                                          hysteroscopyData.classification.toLowerCase().includes('uterine'));
+                    
+                    if (isCorrectData) {
+                        showResult('hysteroscopy-test-results', 
+                            'Hysteroscopy Analysis Data', 
+                            true, 
+                            `Correct hysteroscopy data returned: ${hysteroscopyData.classification}`,
+                            {
+                                confidence: hysteroscopyData.confidence,
+                                parameters: hysteroscopyData.parameters,
+                                technicalDetails: Object.keys(hysteroscopyData.technicalDetails || {}).slice(0, 3)
+                            }
+                        );
+                    } else {
+                        showResult('hysteroscopy-test-results', 
+                            'Hysteroscopy Analysis Data', 
+                            false, 
+                            `Wrong data type returned: ${hysteroscopyData.classification}`
+                        );
+                    }
+                } else {
+                    showResult('hysteroscopy-test-results', 'Config Module', false, 'FertiVisionConfig not loaded');
+                }
+            } catch (error) {
+                showResult('hysteroscopy-test-results', 'Hysteroscopy Analysis', false, `Error: ${error.message}`);
+            }
+        }
+
+        function testTabNavigation() {
+            const container = document.getElementById('tab-test-results');
+            container.innerHTML = '<h3>Testing Tab Navigation...</h3>';
+            
+            const tabs = ['sperm', 'oocyte', 'embryo', 'follicle', 'hysteroscopy', 'datasets', 'training'];
+            
+            tabs.forEach(tab => {
+                const tabBtn = document.querySelector(`[data-tab="${tab}"]`);
+                const tabContent = document.getElementById(`${tab}-tab`);
+                
+                if (tabBtn && tabContent) {
+                    showResult('tab-test-results', 
+                        `${tab.charAt(0).toUpperCase() + tab.slice(1)} Tab`, 
+                        true, 
+                        'Tab button and content found'
+                    );
+                } else {
+                    showResult('tab-test-results', 
+                        `${tab.charAt(0).toUpperCase() + tab.slice(1)} Tab`, 
+                        false, 
+                        `Missing ${!tabBtn ? 'button' : ''} ${!tabContent ? 'content' : ''}`
+                    );
+                }
+            });
+        }
+
+        function testDemoFunctionality() {
+            const container = document.getElementById('demo-func-results');
+            container.innerHTML = '<h3>Testing Demo Functionality...</h3>';
+            
+            try {
+                if (window.FertiVisionDemos) {
+                    showResult('demo-func-results', 'Demo Module', true, 'FertiVisionDemos loaded successfully');
+                    
+                    // Test if demo data exists for all types
+                    const demoData = window.FertiVisionDemos.demoData;
+                    if (demoData) {
+                        const hasFollicle = demoData.follicle ? true : false;
+                        const hasHysteroscopy = demoData.hysteroscopy ? true : false;
+                        
+                        showResult('demo-func-results', 'Follicle Demo', hasFollicle, 
+                            hasFollicle ? 'Follicle demo data available' : 'Follicle demo data missing');
+                        
+                        showResult('demo-func-results', 'Hysteroscopy Demo', hasHysteroscopy, 
+                            hasHysteroscopy ? 'Hysteroscopy demo data available' : 'Hysteroscopy demo data missing');
+                    }
+                } else {
+                    showResult('demo-func-results', 'Demo Module', false, 'FertiVisionDemos not loaded');
+                }
+            } catch (error) {
+                showResult('demo-func-results', 'Demo Functionality', false, `Error: ${error.message}`);
+            }
+        }
+
+        // Auto-run tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                console.log('🧪 Running automated tests...');
+                testDemoData();
+                testFollicleAnalysis();
+                testHysteroscopyAnalysis();
+                testTabNavigation();
+                testDemoFunctionality();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+# Ignore Python files and directories
+*.py
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+ENV/
+
+# Ignore Python-related files
+requirements*.txt
+setup.py
+setup.cfg
+pyproject.toml
+Pipfile
+Pipfile.lock
+
+# Ignore development files
+.git/
+.gitignore
+*.md
+!README.md
+!NETLIFY_DEPLOYMENT.md
+
+# Ignore test files
+test_*
+*_test.py
+tests/
+
+# Ignore build artifacts
+build/
+dist/
+*.egg-info/
+
+# Ignore database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore upload directories
+uploads/
+exports/
+api_uploads/
+
+# Ignore development scripts
+*.sh
+scripts/
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Keep only essential static files
+!index.html
+!static/
+!netlify.toml
+!package.json
+!.nvmrc
+!_redirects

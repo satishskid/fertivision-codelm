@@ -1,0 +1,60 @@
+{
+  "version": 2,
+  "name": "fertivision-cloud-saas",
+  "alias": ["fertivision-cloud.vercel.app"],
+  "regions": ["bom1", "sin1"],
+  "env": {
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "@clerk_publishable_key",
+    "CLERK_SECRET_KEY": "@clerk_secret_key",
+    "NEXT_PUBLIC_RAZORPAY_KEY_ID": "@razorpay_key_id",
+    "RAZORPAY_KEY_SECRET": "@razorpay_key_secret",
+    "GROQ_API_KEY": "@groq_api_key",
+    "OPENROUTER_API_KEY": "@openrouter_api_key",
+    "ADMIN_EMAIL": "@admin_email",
+    "ADMIN_CLERK_USER_ID": "@admin_clerk_user_id",
+    "NEXT_PUBLIC_APP_NAME": "FertiVision",
+    "NEXT_PUBLIC_APP_URL": "https://fertivision-cloud.vercel.app"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "@clerk_publishable_key",
+      "CLERK_SECRET_KEY": "@clerk_secret_key",
+      "NEXT_PUBLIC_RAZORPAY_KEY_ID": "@razorpay_key_id"
+    }
+  },
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/api/health",
+      "destination": "/api/admin/test-ai",
+      "permanent": false
+    }
+  ]
+}

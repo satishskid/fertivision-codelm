@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Tab Test</title>
+    <style>
+        .tab-content { display: none; border: 2px solid red; padding: 20px; margin: 10px; }
+        .tab-content.active { display: block; }
+        .tab-btn { padding: 10px; margin: 5px; background: blue; color: white; border: none; cursor: pointer; }
+        .tab-btn.active { background: green; }
+    </style>
+</head>
+<body>
+    <h1>Debug Test</h1>
+    <div>
+        <button class="tab-btn active" onclick="showTab('tab1', this)">Tab 1</button>
+        <button class="tab-btn" onclick="showTab('tab2', this)">Tab 2</button>
+    </div>
+    
+    <div id="tab1" class="tab-content active">
+        <h2>Tab 1 Content</h2>
+        <form>
+            <input type="file" name="file">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    
+    <div id="tab2" class="tab-content">
+        <h2>Tab 2 Content</h2>
+        <form>
+            <input type="file" name="file">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    
+    <script>
+        function showTab(tabId, btn) {
+            console.log('showTab called with:', tabId, btn);
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+                console.log('Removed active from:', tab.id);
+            });
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) {
+                targetTab.classList.add('active');
+                console.log('Added active to:', tabId);
+            }
+            if(btn) btn.classList.add('active');
+        }
+        
+        // Test on page load
+        console.log('Page loaded');
+        console.log('Tab1 element:', document.getElementById('tab1'));
+        console.log('Tab1 computed style:', getComputedStyle(document.getElementById('tab1')).display);
+    </script>
+</body>
+</html>
