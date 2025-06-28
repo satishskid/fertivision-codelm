@@ -1393,10 +1393,16 @@
                 <button class="tab" onclick="showTab('datasets', 5)">
                     📊 Dataset Testing
                 </button>
-                <button class="tab" onclick="showTab('settings', 6)">
+                <button class="tab" onclick="showTab('documents', 6)">
+                    📄 Lab Reports & Documents
+                </button>
+                <button class="tab" onclick="showTab('history', 7)">
+                    📋 Patient History & Forms
+                </button>
+                <button class="tab" onclick="showTab('settings', 8)">
                     ⚙️ Settings
                 </button>
-                <button class="tab" onclick="showTab('howto', 7)">
+                <button class="tab" onclick="showTab('howto', 9)">
                     📚 How To
                 </button>
             </div>
@@ -1983,6 +1989,60 @@
                 </div>
             </div>
 
+            <!-- Lab Reports & Documents Tab -->
+            <div id="documents-tab" class="tab-content">
+                <h2>📄 Lab Reports & Document Upload</h2>
+                <div class="analysis-section">
+                    <div class="form-section">
+                        <h3>📋 Upload Medical Documents</h3>
+                        <p>Upload lab reports, medical documents, and historical records.</p>
+                        
+                        <div class="input-group">
+                            <label for="doc-patient-id">Patient ID</label>
+                            <input type="text" id="doc-patient-id" placeholder="Enter patient ID">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="document-type">Document Type</label>
+                            <select id="document-type">
+                                <option value="lab_report">Lab Report</option>
+                                <option value="hormone_panel">Hormone Panel</option>
+                                <option value="medical_report">Medical Report</option>
+                                <option value="ultrasound_image">Ultrasound Image</option>
+                            </select>
+                        </div>
+
+                        <div class="upload-section">
+                            <input type="file" id="document-file" accept=".pdf,.jpg,.jpeg,.png">
+                            <button type="button" id="upload-document-btn" class="analyze-btn">
+                                Upload Document
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient History & Forms Tab -->
+            <div id="history-tab" class="tab-content">
+                <h2>📋 Patient History & Medical Forms</h2>
+                <div class="analysis-section">
+                    <div class="form-section">
+                        <h3>👤 Patient Registration</h3>
+                        <form id="patient-registration-form">
+                            <div class="input-group">
+                                <label for="patient-name">Full Name</label>
+                                <input type="text" id="patient-name" placeholder="Enter patient name">
+                            </div>
+                            <div class="input-group">
+                                <label for="patient-age">Age</label>
+                                <input type="number" id="patient-age" placeholder="Age">
+                            </div>
+                            <button type="submit" class="analyze-btn">Register Patient</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <!-- Settings Tab -->
             <div id="settings-tab" class="tab-content">
                 <h2>⚙️ Settings & Configuration</h2>
@@ -2397,7 +2457,7 @@
             }
 
             // Move indicator
-            const tabWidth = 100 / 8; // Now 8 tabs (including How To)
+            const tabWidth = 100 / 10; // Now 10 tabs (sperm, oocyte, embryo, follicle, hysteroscopy, datasets, documents, history, settings, howto)
             const indicator = document.querySelector('.tab-indicator');
             if (indicator) {
                 indicator.style.width = tabWidth + '%';
@@ -2512,14 +2572,19 @@
 
         async function viewEnhancedReport(type, id) {
             try {
-                let endpoint;
-                if (type === 'follicle' || type === 'hysteroscopy') {
-                    endpoint = `/ultrasound_report/${type}/${id}`;
-                } else {
-                    endpoint = `/enhanced_report/${type}/${id}`;
-                }
+                // Use ultrasound_report endpoint for all analysis types since it now handles all types
+                const endpoint = `/ultrasound_report/${type}/${id}`;
                 const response = await fetch(endpoint);
                 const result = await response.json();
+                
+                // Check if this is a sample report and notify the user
+                if (result.report.includes('⚠️ ALERT: Analysis ID missing') || 
+                    result.report.includes('⚠️ ALERT: Analysis data not found')) {
+                    showNotification('⚠️ Showing sample report - Analysis ID missing or not found', 'warning');
+                } else {
+                    showNotification('📄 Report generated successfully');
+                }
+                
                 const reportWindow = window.open('', '_blank', 'width=1000,height=800');
                 reportWindow.document.write(`
                     <html>
@@ -2567,6 +2632,16 @@
                                     font-size: 0.95rem;
                                     line-height: 1.6;
                                 }
+                                .sample-alert {
+                                    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+                                    border: 2px solid #f39c12;
+                                    border-radius: 10px;
+                                    padding: 15px;
+                                    margin-bottom: 20px;
+                                    color: #856404;
+                                    text-align: center;
+                                    font-weight: 600;
+                                }
                                 @media print {
                                     body { background: white; }
                                     .report-container { box-shadow: none; }
@@ -2579,6 +2654,8 @@
                                     <div class="report-title">🔬 ${type.toUpperCase()} Analysis Report</div>
                                     <div class="report-subtitle">Reproductive Imaging Analysis</div>
                                 </div>
+                                ${result.report.includes('SAMPLE') ? 
+                                    '<div class="sample-alert">⚠️ This is a sample report - Please ensure analysis was completed with valid ID</div>' : ''}
                                 <pre>${result.report}</pre>
                             </div>
                         </body>
@@ -2697,6 +2774,7 @@
                     }
                     .notification.success { background: #22c55e; }
                     .notification.error { background: #ef4444; }
+                    .notification.warning { background: #f59e0b; }
                     .notification button {
                         background: none;
                         border: none;

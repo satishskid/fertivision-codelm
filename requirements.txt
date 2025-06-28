@@ -1,0 +1,27 @@
+# Flask Web Framework
+Flask>=2.0.0
+Werkzeug>=2.0.0
+
+# PDF Generation
+reportlab>=3.6.0
+
+# Image Processing
+Pillow>=9.0.0
+opencv-python>=4.5.0
+numpy>=1.20.0
+
+# PDF Reading
+PyPDF2>=2.0.0
+
+# Data Visualization
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# HTTP Requests
+requests>=2.25.0
+
+# Authentication
+bcrypt>=3.2.0
+
+# Additional utilities
+python-dateutil>=2.8.0
