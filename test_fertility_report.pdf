@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "error": "FertilityScoreBreakdown.__init__() missing 3 required positional arguments: 'critical_findings', 'positive_indicators', and 'areas_for_improvement'"
+}

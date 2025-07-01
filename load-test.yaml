@@ -1,0 +1,174 @@
+# Load Testing Configuration for FertiVision
+# Artillery.js configuration for performance testing
+
+config:
+  target: 'https://fertivision-service-url.com'  # Replace with actual URL
+  phases:
+    # Warm-up phase
+    - duration: 30
+      arrivalRate: 5
+      name: "Warm-up"
+    
+    # Gradual load increase
+    - duration: 60
+      arrivalRate: 10
+      rampTo: 50
+      name: "Ramp up load"
+    
+    # Sustained load
+    - duration: 120
+      arrivalRate: 50
+      name: "Sustained load"
+    
+    # Peak load testing
+    - duration: 60
+      arrivalRate: 100
+      name: "Peak load"
+    
+    # Stress testing
+    - duration: 30
+      arrivalRate: 200
+      name: "Stress test"
+
+  defaults:
+    headers:
+      Content-Type: 'application/json'
+      User-Agent: 'FertiVision Load Test'
+
+  processor: "./load-test-functions.js"
+
+scenarios:
+  # Health check endpoint
+  - name: "Health Check"
+    weight: 10
+    flow:
+      - get:
+          url: "/health"
+          expect:
+            - statusCode: 200
+            - hasHeader: 'content-type'
+
+  # Main page load
+  - name: "Home Page Load"
+    weight: 30
+    flow:
+      - get:
+          url: "/"
+          expect:
+            - statusCode: 200
+            - contentType: text/html
+
+  # Image upload and analysis (sperm)
+  - name: "Sperm Analysis"
+    weight: 25
+    flow:
+      - post:
+          url: "/analyze_sperm"
+          form:
+            analysis_mode: "sperm_motility"
+            patient_name: "Test Patient {{ $randomString() }}"
+            doctor_name: "Dr. Test"
+            clinic_name: "Test Clinic"
+          beforeRequest: "uploadTestImage"
+          expect:
+            - statusCode: 200
+          capture:
+            - json: "$.analysis_id"
+              as: "analysis_id"
+      
+      # Get report for the analysis
+      - get:
+          url: "/get_ultrasound_report/{{ analysis_id }}"
+          expect:
+            - statusCode: 200
+            - contentType: application/json
+
+  # Oocyte analysis
+  - name: "Oocyte Analysis"
+    weight: 20
+    flow:
+      - post:
+          url: "/analyze_oocyte"
+          form:
+            analysis_mode: "oocyte_maturity"
+            patient_name: "Test Patient {{ $randomString() }}"
+            doctor_name: "Dr. Test"
+            clinic_name: "Test Clinic"
+          beforeRequest: "uploadTestImage"
+          expect:
+            - statusCode: 200
+
+  # Embryo analysis
+  - name: "Embryo Analysis"
+    weight: 15
+    flow:
+      - post:
+          url: "/analyze_embryo"
+          form:
+            analysis_mode: "embryo_grading"
+            patient_name: "Test Patient {{ $randomString() }}"
+            doctor_name: "Dr. Test"
+            clinic_name: "Test Clinic"
+          beforeRequest: "uploadTestImage"
+          expect:
+            - statusCode: 200
+
+  # Report generation with missing ID (test error handling)
+  - name: "Missing ID Handling"
+    weight: 5
+    flow:
+      - get:
+          url: "/get_ultrasound_report/undefined"
+          expect:
+            - statusCode: 200  # Should return sample report, not error
+            - contentType: application/json
+      
+      - get:
+          url: "/get_ultrasound_report/missing"
+          expect:
+            - statusCode: 200  # Should return sample report, not error
+            - contentType: application/json
+
+  # Patient history operations
+  - name: "Patient History"
+    weight: 10
+    flow:
+      - get:
+          url: "/patient_history"
+          expect:
+            - statusCode: 200
+      
+      - post:
+          url: "/save_patient_data"
+          json:
+            patient_name: "Test Patient {{ $randomString() }}"
+            age: "{{ $randomInt(20, 45) }}"
+            medical_history: "Test medical history"
+            analysis_type: "sperm"
+          expect:
+            - statusCode: 200
+
+# Performance thresholds
+expect:
+  # Response time thresholds
+  p95: 2000  # 95% of requests should complete within 2 seconds
+  p99: 5000  # 99% of requests should complete within 5 seconds
+  
+  # Error rate threshold
+  maxErrorRate: 1  # Maximum 1% error rate
+  
+  # Minimum requests per second
+  minRps: 10
+
+# Monitoring and reporting
+plugins:
+  metrics-by-endpoint: {}
+  
+  # CloudWatch metrics (if using AWS)
+  cloudwatch:
+    namespace: "FertiVision/LoadTest"
+    
+  # Custom metrics
+  publish-metrics:
+    - type: "cloudwatch"
+      region: "us-central1"

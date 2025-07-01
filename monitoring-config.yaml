@@ -1,0 +1,309 @@
+# FertiVision Cloud Monitoring Configuration
+# Google Cloud Monitoring setup for production deployment
+
+# Uptime Check Configuration
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: fertivision-monitoring
+  labels:
+    app: fertivision
+spec:
+  groups:
+  - name: fertivision.rules
+    rules:
+    # Application Health Monitoring
+    - alert: FertiVisionDown
+      expr: up{job="fertivision"} == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "FertiVision application is down"
+        description: "FertiVision has been down for more than 1 minute"
+
+    # Response Time Monitoring
+    - alert: HighResponseTime
+      expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High response time detected"
+        description: "95th percentile response time is {{ $value }}s"
+
+    # Error Rate Monitoring
+    - alert: HighErrorRate
+      expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+      for: 2m
+      labels:
+        severity: critical
+      annotations:
+        summary: "High error rate detected"
+        description: "Error rate is {{ $value | humanizePercentage }}"
+
+    # Memory Usage Monitoring
+    - alert: HighMemoryUsage
+      expr: container_memory_usage_bytes / container_spec_memory_limit_bytes > 0.8
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High memory usage"
+        description: "Memory usage is {{ $value | humanizePercentage }}"
+
+    # CPU Usage Monitoring
+    - alert: HighCPUUsage
+      expr: rate(container_cpu_usage_seconds_total[5m]) > 0.8
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High CPU usage"
+        description: "CPU usage is {{ $value | humanizePercentage }}"
+
+    # Database Connection Monitoring
+    - alert: DatabaseConnectionIssue
+      expr: mysql_up == 0 or postgres_up == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Database connection issue"
+        description: "Cannot connect to database"
+
+    # Analysis Processing Time
+    - alert: SlowAnalysisProcessing
+      expr: histogram_quantile(0.95, rate(analysis_processing_duration_seconds_bucket[5m])) > 30
+      for: 3m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Slow analysis processing"
+        description: "95th percentile analysis time is {{ $value }}s"
+
+    # Storage Issues
+    - alert: StorageIssue
+      expr: up{job="cloud-storage"} == 0
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Cloud Storage connection issue"
+        description: "Cannot connect to Cloud Storage"
+
+---
+# Notification Channels Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alerting-config
+data:
+  notification-channels.yaml: |
+    email:
+      - name: "admin-alerts"
+        to: "admin@fertivision.com"
+        subject: "[ALERT] FertiVision {{ .GroupLabels.alertname }}"
+        
+    slack:
+      - name: "dev-team"
+        webhook_url: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+        channel: "#alerts"
+        username: "FertiVision Monitor"
+        
+    pagerduty:
+      - name: "on-call"
+        integration_key: "YOUR_PAGERDUTY_INTEGRATION_KEY"
+        severity: "critical"
+
+---
+# Custom Metrics Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-metrics
+data:
+  metrics.yaml: |
+    # Analysis Metrics
+    analysis_total:
+      type: counter
+      help: "Total number of analyses performed"
+      labels: ["type", "status"]
+      
+    analysis_duration_seconds:
+      type: histogram
+      help: "Time taken to process analysis"
+      labels: ["type"]
+      buckets: [0.1, 0.5, 1, 2, 5, 10, 30, 60]
+      
+    # User Metrics
+    active_users:
+      type: gauge
+      help: "Number of active users"
+      
+    user_sessions_total:
+      type: counter
+      help: "Total user sessions"
+      labels: ["source"]
+      
+    # System Metrics
+    memory_usage_bytes:
+      type: gauge
+      help: "Memory usage in bytes"
+      
+    cpu_usage_percent:
+      type: gauge
+      help: "CPU usage percentage"
+      
+    # Business Metrics
+    reports_generated_total:
+      type: counter
+      help: "Total reports generated"
+      labels: ["type", "status"]
+      
+    patient_records_total:
+      type: counter
+      help: "Total patient records processed"
+      
+    # Error Metrics
+    errors_total:
+      type: counter
+      help: "Total errors encountered"
+      labels: ["type", "severity"]
+
+---
+# SLI/SLO Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sli-slo-config
+data:
+  objectives.yaml: |
+    # Service Level Objectives
+    slos:
+      availability:
+        target: 99.9  # 99.9% uptime
+        window: "30d"
+        error_budget: 0.1
+        
+      latency:
+        target: 95    # 95% of requests < 2s
+        threshold: 2000ms
+        window: "30d"
+        
+      error_rate:
+        target: 99    # 99% success rate
+        window: "30d"
+        
+      analysis_processing:
+        target: 95    # 95% of analyses < 10s
+        threshold: 10000ms
+        window: "7d"
+    
+    # Service Level Indicators
+    slis:
+      request_success_rate:
+        query: |
+          sum(rate(http_requests_total{status!~"5.."}[5m])) / 
+          sum(rate(http_requests_total[5m]))
+          
+      request_latency_p95:
+        query: |
+          histogram_quantile(0.95, 
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le)
+          )
+          
+      analysis_success_rate:
+        query: |
+          sum(rate(analysis_total{status="success"}[5m])) / 
+          sum(rate(analysis_total[5m]))
+          
+      analysis_latency_p95:
+        query: |
+          histogram_quantile(0.95, 
+            sum(rate(analysis_duration_seconds_bucket[5m])) by (le)
+          )
+
+---
+# Dashboard Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard-config
+data:
+  fertivision-dashboard.json: |
+    {
+      "dashboard": {
+        "title": "FertiVision Production Monitoring",
+        "panels": [
+          {
+            "title": "Request Rate",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total[5m])) by (status)",
+                "legend": "{{status}}"
+              }
+            ]
+          },
+          {
+            "title": "Response Time",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))",
+                "legend": "95th percentile"
+              },
+              {
+                "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))",
+                "legend": "50th percentile"
+              }
+            ]
+          },
+          {
+            "title": "Analysis Processing Time",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, sum(rate(analysis_duration_seconds_bucket[5m])) by (type, le))",
+                "legend": "{{type}} - 95th percentile"
+              }
+            ]
+          },
+          {
+            "title": "Error Rate",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))",
+                "legend": "Error Rate"
+              }
+            ]
+          },
+          {
+            "title": "Active Users",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "active_users",
+                "legend": "Current Active Users"
+              }
+            ]
+          },
+          {
+            "title": "System Resources",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "cpu_usage_percent",
+                "legend": "CPU Usage %"
+              },
+              {
+                "expr": "memory_usage_bytes / 1024^3",
+                "legend": "Memory Usage GB"
+              }
+            ]
+          }
+        ]
+      }
+    }

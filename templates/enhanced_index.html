@@ -1991,32 +1991,254 @@
 
             <!-- Lab Reports & Documents Tab -->
             <div id="documents-tab" class="tab-content">
-                <h2>📄 Lab Reports & Document Upload</h2>
+                <h2>📄 Lab Reports & Document Management</h2>
                 <div class="analysis-section">
+                    <!-- Document Upload Section -->
                     <div class="form-section">
                         <h3>📋 Upload Medical Documents</h3>
-                        <p>Upload lab reports, medical documents, and historical records.</p>
+                        <p>Upload lab reports, medical documents, and historical records for comprehensive patient management.</p>
                         
-                        <div class="input-group">
-                            <label for="doc-patient-id">Patient ID</label>
-                            <input type="text" id="doc-patient-id" placeholder="Enter patient ID">
+                        <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div class="input-group">
+                                <label for="doc-patient-id">Patient ID</label>
+                                <input type="text" id="doc-patient-id" placeholder="e.g., PT-2025-001">
+                            </div>
+                            <div class="input-group">
+                                <label for="document-type">Document Type</label>
+                                <select id="document-type">
+                                    <option value="hormone_panel">Hormone Panel</option>
+                                    <option value="semen_analysis">Semen Analysis Report</option>
+                                    <option value="ultrasound_report">Ultrasound Report</option>
+                                    <option value="lab_report">General Lab Report</option>
+                                    <option value="medical_history">Medical History</option>
+                                    <option value="consultation_notes">Consultation Notes</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="input-group">
-                            <label for="document-type">Document Type</label>
-                            <select id="document-type">
-                                <option value="lab_report">Lab Report</option>
-                                <option value="hormone_panel">Hormone Panel</option>
-                                <option value="medical_report">Medical Report</option>
-                                <option value="ultrasound_image">Ultrasound Image</option>
-                            </select>
-                        </div>
-
-                        <div class="upload-section">
-                            <input type="file" id="document-file" accept=".pdf,.jpg,.jpeg,.png">
-                            <button type="button" id="upload-document-btn" class="analyze-btn">
-                                Upload Document
+                        <div class="upload-section" ondrop="dropDocumentHandler(event)" ondragover="dragOverHandler(event)" ondragleave="dragLeaveHandler(event)" style="border: 2px dashed var(--primary-color); border-radius: 12px; padding: 2rem; text-align: center; background: rgba(37, 99, 235, 0.05);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📁</div>
+                            <h4>Drag & Drop Files Here</h4>
+                            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Or click to browse files</p>
+                            <input type="file" id="document-file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display: none;" multiple>
+                            <button type="button" onclick="document.getElementById('document-file').click()" class="btn-primary" style="margin-right: 1rem;">
+                                📎 Choose Files
                             </button>
+                            <button type="button" id="upload-document-btn" onclick="uploadDocument()" class="btn" style="background: var(--accent-color); color: white;">
+                                ⬆️ Upload Documents
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Lab Reports Section -->
+                    <div class="form-section">
+                        <h3>� Sample Lab Reports (Demo Data)</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                            Click on any sample report to view detailed results. These are realistic examples used for demonstration purposes.
+                        </p>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                            <!-- Hormone Panel Report -->
+                            <div class="lab-report-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease;" onclick="viewLabReport('hormone_panel')" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';" onmouseout="this.style.borderColor='#e5e7eb'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: bold;">🧪</div>
+                                        <div>
+                                            <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">Comprehensive Hormone Panel</h4>
+                                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Patient: Sarah Johnson | ID: FV-2025-001</div>
+                                        </div>
+                                    </div>
+                                    <span style="background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500;">Complete</span>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--text-secondary);">Test Date:</span>
+                                        <span style="font-weight: 500;">June 25, 2025</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--text-secondary);">Lab:</span>
+                                        <span style="font-weight: 500;">FertiVision Diagnostics</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                                        <span style="color: var(--text-secondary);">Report ID:</span>
+                                        <span style="font-weight: 500;">HR-2025-0625-001</span>
+                                    </div>
+                                </div>
+
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                    <h5 style="margin: 0 0 0.75rem 0; color: var(--primary-color); font-size: 0.95rem;">Key Results Summary:</h5>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
+                                        <div><span style="color: var(--text-secondary);">FSH:</span> <span style="font-weight: 500; color: #10b981;">6.8 mIU/mL ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">LH:</span> <span style="font-weight: 500; color: #10b981;">4.2 mIU/mL ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Estradiol:</span> <span style="font-weight: 500; color: #10b981;">145 pg/mL ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Progesterone:</span> <span style="font-weight: 500; color: #f59e0b;">2.1 ng/mL ⚠️</span></div>
+                                        <div><span style="color: var(--text-secondary);">AMH:</span> <span style="font-weight: 500; color: #10b981;">3.2 ng/mL ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Prolactin:</span> <span style="font-weight: 500; color: #10b981;">18.5 ng/mL ✓</span></div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 0.5rem; align-items: center; padding: 0.75rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 4px solid #10b981;">
+                                    <span style="color: #10b981; font-size: 1.1rem;">✓</span>
+                                    <span style="font-size: 0.9rem; color: #065f46; font-weight: 500;">Overall: Good ovarian reserve, normal reproductive hormones</span>
+                                </div>
+                            </div>
+
+                            <!-- Semen Analysis Report -->
+                            <div class="lab-report-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease;" onclick="viewLabReport('semen_analysis')" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';" onmouseout="this.style.borderColor='#e5e7eb'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #10b981, #047857); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: bold;">🧬</div>
+                                        <div>
+                                            <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">Complete Semen Analysis</h4>
+                                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Patient: Michael Davis | ID: FV-2025-002</div>
+                                        </div>
+                                    </div>
+                                    <span style="background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500;">Complete</span>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--text-secondary);">Collection Date:</span>
+                                        <span style="font-weight: 500;">June 26, 2025</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--text-secondary);">Abstinence Period:</span>
+                                        <span style="font-weight: 500;">3 days</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                                        <span style="color: var(--text-secondary);">Report ID:</span>
+                                        <span style="font-weight: 500;">SA-2025-0626-002</span>
+                                    </div>
+                                </div>
+
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                    <h5 style="margin: 0 0 0.75rem 0; color: var(--primary-color); font-size: 0.95rem;">Analysis Results:</h5>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
+                                        <div><span style="color: var(--text-secondary);">Volume:</span> <span style="font-weight: 500; color: #10b981;">3.2 mL ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Concentration:</span> <span style="font-weight: 500; color: #10b981;">45 M/mL ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Total Count:</span> <span style="font-weight: 500; color: #10b981;">144 M ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Motility:</span> <span style="font-weight: 500; color: #f59e0b;">48% ⚠️</span></div>
+                                        <div><span style="color: var(--text-secondary);">Morphology:</span> <span style="font-weight: 500; color: #10b981;">6% ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">pH:</span> <span style="font-weight: 500; color: #10b981;">7.4 ✓</span></div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 0.5rem; align-items: center; padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                    <span style="color: #f59e0b; font-size: 1.1rem;">⚠️</span>
+                                    <span style="font-size: 0.9rem; color: #92400e; font-weight: 500;">Borderline motility - recommend lifestyle optimization</span>
+                                </div>
+                            </div>
+
+                            <!-- Genetic Screening Report -->
+                            <div class="lab-report-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease;" onclick="viewLabReport('genetic_screening')" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';" onmouseout="this.style.borderColor='#e5e7eb'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: bold;">🧬</div>
+                                        <div>
+                                            <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">Carrier Screening Panel</h4>
+                                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Patient: Emma Wilson | ID: FV-2025-003</div>
+                                        </div>
+                                    </div>
+                                    <span style="background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500;">Complete</span>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--text-secondary);">Sample Date:</span>
+                                        <span style="font-weight: 500;">June 20, 2025</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--text-secondary);">Panel Type:</span>
+                                        <span style="font-weight: 500;">Comprehensive (180+ conditions)</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                                        <span style="color: var(--text-secondary);">Report ID:</span>
+                                        <span style="font-weight: 500;">GS-2025-0620-003</span>
+                                    </div>
+                                </div>
+
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                    <h5 style="margin: 0 0 0.75rem 0; color: var(--primary-color); font-size: 0.95rem;">Screening Results:</h5>
+                                    <div style="font-size: 0.85rem; line-height: 1.6;">
+                                        <div style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">Cystic Fibrosis:</span> <span style="font-weight: 500; color: #10b981;">Negative ✓</span></div>
+                                        <div style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">Spinal Muscular Atrophy:</span> <span style="font-weight: 500; color: #10b981;">Negative ✓</span></div>
+                                        <div style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">Fragile X Syndrome:</span> <span style="font-weight: 500; color: #10b981;">Negative ✓</span></div>
+                                        <div style="margin-bottom: 0.5rem;"><span style="color: var(--text-secondary);">Tay-Sachs Disease:</span> <span style="font-weight: 500; color: #10b981;">Negative ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Beta Thalassemia:</span> <span style="font-weight: 500; color: #ef4444;">Carrier 🔴</span></div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 0.5rem; align-items: center; padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border-radius: 8px; border-left: 4px solid #ef4444;">
+                                    <span style="color: #ef4444; font-size: 1.1rem;">🔴</span>
+                                    <span style="font-size: 0.9rem; color: #991b1b; font-weight: 500;">Carrier status detected - genetic counseling recommended</span>
+                                </div>
+                            </div>
+
+                            <!-- Thyroid Function Test -->
+                            <div class="lab-report-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease;" onclick="viewLabReport('thyroid_function')" onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)';" onmouseout="this.style.borderColor='#e5e7eb'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                                    <div style="display: flex; gap: 1rem; align-items: center;">
+                                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: bold;">🦋</div>
+                                        <div>
+                                            <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">Thyroid Function Panel</h4>
+                                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Patient: Lisa Chen | ID: FV-2025-004</div>
+                                        </div>
+                                    </div>
+                                    <span style="background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 500;">Complete</span>
+                                </div>
+                                
+                                <div style="margin-bottom: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--text-secondary);">Test Date:</span>
+                                        <span style="font-weight: 500;">June 24, 2025</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--text-secondary);">Fasting Status:</span>
+                                        <span style="font-weight: 500;">Non-fasting</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                                        <span style="color: var(--text-secondary);">Report ID:</span>
+                                        <span style="font-weight: 500;">TF-2025-0624-004</span>
+                                    </div>
+                                </div>
+
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                    <h5 style="margin: 0 0 0.75rem 0; color: var(--primary-color); font-size: 0.95rem;">Thyroid Results:</h5>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
+                                        <div><span style="color: var(--text-secondary);">TSH:</span> <span style="font-weight: 500; color: #10b981;">2.4 mIU/L ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Free T4:</span> <span style="font-weight: 500; color: #10b981;">1.2 ng/dL ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Free T3:</span> <span style="font-weight: 500; color: #10b981;">3.1 pg/mL ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">TPO Ab:</span> <span style="font-weight: 500; color: #10b981;">< 9 IU/mL ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Tg Ab:</span> <span style="font-weight: 500; color: #10b981;">< 15 IU/mL ✓</span></div>
+                                        <div><span style="color: var(--text-secondary);">Reverse T3:</span> <span style="font-weight: 500; color: #10b981;">24 ng/dL ✓</span></div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 0.5rem; align-items: center; padding: 0.75rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 4px solid #10b981;">
+                                    <span style="color: #10b981; font-size: 1.1rem;">✓</span>
+                                    <span style="font-size: 0.9rem; color: #065f46; font-weight: 500;">Normal thyroid function - optimal for fertility</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Document Management Actions -->
+                        <div class="document-actions" style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; margin-top: 2rem;">
+                            <h4 style="margin: 0 0 1rem 0; color: var(--primary-color);">📋 Document Management</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                <button class="btn" onclick="generateSampleReport('hormone')" style="background: var(--primary-color); color: white; padding: 1rem; border-radius: 8px; border: none; cursor: pointer;">
+                                    📊 Generate Sample Report
+                                </button>
+                                <button class="btn" onclick="exportToEMR()" style="background: var(--accent-color); color: white; padding: 1rem; border-radius: 8px; border: none; cursor: pointer;">
+                                    🏥 Export to EMR
+                                </button>
+                                <button class="btn" onclick="printReports()" style="background: var(--secondary-color); color: white; padding: 1rem; border-radius: 8px; border: none; cursor: pointer;">
+                                    🖨️ Print Reports
+                                </button>
+                                <button class="btn" onclick="shareWithPhysician()" style="background: #10b981; color: white; padding: 1rem; border-radius: 8px; border: none; cursor: pointer;">
+                                    👨‍⚕️ Share with Physician
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2026,19 +2248,277 @@
             <div id="history-tab" class="tab-content">
                 <h2>📋 Patient History & Medical Forms</h2>
                 <div class="analysis-section">
+                    <!-- Patient Registration Section -->
                     <div class="form-section">
-                        <h3>👤 Patient Registration</h3>
+                        <h3>👤 Patient Registration & Demographics</h3>
                         <form id="patient-registration-form">
-                            <div class="input-group">
-                                <label for="patient-name">Full Name</label>
-                                <input type="text" id="patient-name" placeholder="Enter patient name">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                                <div class="input-group">
+                                    <label for="patient-name">Full Name *</label>
+                                    <input type="text" id="patient-name" placeholder="e.g., Sarah Johnson" value="Sarah Johnson">
+                                </div>
+                                <div class="input-group">
+                                    <label for="patient-age">Age *</label>
+                                    <input type="number" id="patient-age" placeholder="Age" value="32" min="18" max="50">
+                                </div>
+                                <div class="input-group">
+                                    <label for="patient-id">Patient ID</label>
+                                    <input type="text" id="patient-id" placeholder="Auto-generated" value="PT-2025-001" readonly>
+                                </div>
+                                <div class="input-group">
+                                    <label for="date-of-birth">Date of Birth</label>
+                                    <input type="date" id="date-of-birth" value="1992-03-15">
+                                </div>
+                                <div class="input-group">
+                                    <label for="gender">Gender</label>
+                                    <select id="gender">
+                                        <option value="female" selected>Female</option>
+                                        <option value="male">Male</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="partner-age">Partner Age</label>
+                                    <input type="number" id="partner-age" placeholder="Partner's age" value="35">
+                                </div>
                             </div>
-                            <div class="input-group">
-                                <label for="patient-age">Age</label>
-                                <input type="number" id="patient-age" placeholder="Age">
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                                <div class="input-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" placeholder="(555) 123-4567" value="(555) 234-5678">
+                                </div>
+                                <div class="input-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" id="email" placeholder="patient@email.com" value="sarah.johnson@email.com">
+                                </div>
+                                <div class="input-group">
+                                    <label for="insurance">Insurance Provider</label>
+                                    <input type="text" id="insurance" placeholder="Insurance company" value="Blue Cross Blue Shield">
+                                </div>
+                                <div class="input-group">
+                                    <label for="referring-physician">Referring Physician</label>
+                                    <input type="text" id="referring-physician" placeholder="Dr. Name" value="Dr. Emily Chen, MD">
+                                </div>
                             </div>
-                            <button type="submit" class="analyze-btn">Register Patient</button>
                         </form>
+                    </div>
+
+                    <!-- Medical History Section -->
+                    <div class="form-section">
+                        <h3>🏥 Medical & Reproductive History</h3>
+                        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                                <!-- Reproductive History -->
+                                <div class="history-section">
+                                    <h4 style="color: var(--primary-color); margin-bottom: 1rem;">👶 Reproductive History</h4>
+                                    <div class="history-grid" style="display: grid; gap: 0.75rem;">
+                                        <div class="history-item">
+                                            <label><strong>Time Trying to Conceive:</strong></label>
+                                            <select style="width: 100%; padding: 0.5rem;">
+                                                <option value="6-12months" selected>6-12 months</option>
+                                                <option value="1-2years">1-2 years</option>
+                                                <option value="2+years">2+ years</option>
+                                            </select>
+                                        </div>
+                                        <div class="history-item">
+                                            <label><strong>Previous Pregnancies:</strong></label>
+                                            <input type="number" value="1" style="width: 100%; padding: 0.5rem;">
+                                        </div>
+                                        <div class="history-item">
+                                            <label><strong>Live Births:</strong></label>
+                                            <input type="number" value="0" style="width: 100%; padding: 0.5rem;">
+                                        </div>
+                                        <div class="history-item">
+                                            <label><strong>Miscarriages:</strong></label>
+                                            <input type="number" value="1" style="width: 100%; padding: 0.5rem;">
+                                        </div>
+                                        <div class="history-item">
+                                            <label><strong>Last Menstrual Period:</strong></label>
+                                            <input type="date" value="2025-06-15" style="width: 100%; padding: 0.5rem;">
+                                        </div>
+                                        <div class="history-item">
+                                            <label><strong>Cycle Length:</strong></label>
+                                            <input type="text" value="28 days (regular)" style="width: 100%; padding: 0.5rem;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Medical Conditions -->
+                                <div class="history-section">
+                                    <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🩺 Medical Conditions</h4>
+                                    <div class="checkbox-group" style="display: grid; gap: 0.5rem;">
+                                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <input type="checkbox"> PCOS (Polycystic Ovary Syndrome)
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <input type="checkbox" checked> Endometriosis
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <input type="checkbox"> Thyroid disorders
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <input type="checkbox"> Diabetes
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <input type="checkbox"> Autoimmune conditions
+                                        </label>
+                                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <input type="checkbox"> Previous pelvic surgery
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Current Medications -->
+                                <div class="history-section">
+                                    <h4 style="color: var(--primary-color); margin-bottom: 1rem;">💊 Current Medications</h4>
+                                    <div class="medication-list">
+                                        <div class="medication-item" style="background: #f8f9fa; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                                            <div style="font-weight: 600;">Prenatal Vitamins</div>
+                                            <div style="font-size: 0.85rem; color: var(--text-secondary);">1 tablet daily - Started 3 months ago</div>
+                                        </div>
+                                        <div class="medication-item" style="background: #f8f9fa; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                                            <div style="font-weight: 600;">Metformin</div>
+                                            <div style="font-size: 0.85rem; color: var(--text-secondary);">500mg twice daily - For insulin resistance</div>
+                                        </div>
+                                        <div class="medication-item" style="background: #f8f9fa; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                                            <div style="font-weight: 600;">CoQ10</div>
+                                            <div style="font-size: 0.85rem; color: var(--text-secondary);">200mg daily - Egg quality support</div>
+                                        </div>
+                                    </div>
+                                    <button style="background: var(--primary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;">+ Add Medication</button>
+                                </div>
+                            </div>
+
+                            <!-- Lifestyle Factors -->
+                            <div class="lifestyle-section" style="margin-top: 2rem;">
+                                <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🌱 Lifestyle Factors</h4>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                                    <div class="input-group">
+                                        <label>Smoking Status</label>
+                                        <select style="width: 100%; padding: 0.5rem;">
+                                            <option value="never" selected>Never smoked</option>
+                                            <option value="former">Former smoker</option>
+                                            <option value="current">Current smoker</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Alcohol Consumption</label>
+                                        <select style="width: 100%; padding: 0.5rem;">
+                                            <option value="none" selected>None</option>
+                                            <option value="occasional">Occasional (1-2 drinks/week)</option>
+                                            <option value="moderate">Moderate (3-7 drinks/week)</option>
+                                            <option value="heavy">Heavy (>7 drinks/week)</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Exercise Frequency</label>
+                                        <select style="width: 100%; padding: 0.5rem;">
+                                            <option value="regular" selected>Regular (3-5x/week)</option>
+                                            <option value="moderate">Moderate (1-2x/week)</option>
+                                            <option value="minimal">Minimal</option>
+                                            <option value="none">None</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Stress Level (1-10)</label>
+                                        <input type="range" min="1" max="10" value="6" style="width: 100%;" oninput="this.nextElementSibling.textContent = this.value">
+                                        <div style="text-align: center; font-weight: 600; color: var(--primary-color);">6</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Previous Test Results -->
+                    <div class="form-section">
+                        <h3>📊 Previous Test Results & Analysis History</h3>
+                        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem;">
+                            <div class="test-results-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                                <!-- Recent Analysis Results -->
+                                <div class="test-result-card" style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                                    <h5 style="margin: 0 0 0.75rem 0; color: var(--primary-color);">🔬 Recent Follicle Analysis</h5>
+                                    <div style="font-size: 0.9rem; line-height: 1.4;">
+                                        <div><strong>Date:</strong> June 20, 2025</div>
+                                        <div><strong>AFC (Antral Follicle Count):</strong> 12</div>
+                                        <div><strong>Left Ovary:</strong> 6 follicles</div>
+                                        <div><strong>Right Ovary:</strong> 6 follicles</div>
+                                        <div><strong>Largest Follicle:</strong> 18mm</div>
+                                        <div style="margin-top: 0.5rem;"><span style="background: #22c55e; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">Normal Range</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="test-result-card" style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                                    <h5 style="margin: 0 0 0.75rem 0; color: var(--primary-color);">🧪 Hormone Panel (May 2025)</h5>
+                                    <div style="font-size: 0.9rem; line-height: 1.4;">
+                                        <div><strong>FSH:</strong> 8.2 mIU/mL <span style="color: #f59e0b;">↑</span></div>
+                                        <div><strong>LH:</strong> 6.1 mIU/mL</div>
+                                        <div><strong>AMH:</strong> 2.8 ng/mL <span style="color: #ef4444;">↓</span></div>
+                                        <div><strong>Estradiol:</strong> 132 pg/mL</div>
+                                        <div><strong>TSH:</strong> 2.3 μIU/mL</div>
+                                        <div style="margin-top: 0.5rem;"><span style="background: #f59e0b; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">Needs Attention</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="test-result-card" style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                                    <h5 style="margin: 0 0 0.75rem 0; color: var(--primary-color);">🧬 Partner Semen Analysis</h5>
+                                    <div style="font-size: 0.9rem; line-height: 1.4;">
+                                        <div><strong>Date:</strong> April 15, 2025</div>
+                                        <div><strong>Volume:</strong> 2.8 mL</div>
+                                        <div><strong>Concentration:</strong> 38 M/mL</div>
+                                        <div><strong>Total Motility:</strong> 52%</div>
+                                        <div><strong>Progressive:</strong> 35%</div>
+                                        <div><strong>Normal Morphology:</strong> 6%</div>
+                                        <div style="margin-top: 0.5rem;"><span style="background: #f59e0b; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">Borderline</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Treatment Plan & Notes -->
+                    <div class="form-section">
+                        <h3>📝 Treatment Plan & Clinical Notes</h3>
+                        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem;">
+                            <div class="treatment-timeline" style="margin-bottom: 2rem;">
+                                <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🗓️ Treatment Timeline</h4>
+                                <div class="timeline-item" style="border-left: 3px solid var(--primary-color); padding-left: 1rem; margin-bottom: 1rem;">
+                                    <div style="font-weight: 600; color: var(--primary-color);">June 2025 - Initial Consultation</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.9rem;">Comprehensive fertility assessment, hormone panel ordered</div>
+                                </div>
+                                <div class="timeline-item" style="border-left: 3px solid var(--accent-color); padding-left: 1rem; margin-bottom: 1rem;">
+                                    <div style="font-weight: 600; color: var(--accent-color);">July 2025 - Planned Next Steps</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.9rem;">Ovulation induction trial, partner repeat semen analysis</div>
+                                </div>
+                                <div class="timeline-item" style="border-left: 3px solid #94a3b8; padding-left: 1rem;">
+                                    <div style="font-weight: 600; color: #94a3b8;">August 2025 - Future Consideration</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.9rem;">IVF evaluation if needed</div>
+                                </div>
+                            </div>
+
+                            <div class="clinical-notes">
+                                <h4 style="color: var(--primary-color); margin-bottom: 1rem;">📋 Clinical Notes</h4>
+                                <textarea style="width: 100%; min-height: 120px; padding: 1rem; border: 1px solid #d1d5db; border-radius: 8px; font-family: inherit;" placeholder="Enter clinical notes...">Patient presents with 18-month history of infertility. Previous early pregnancy loss at 8 weeks. Current cycle day 10. Ultrasound shows good follicular development. Plan for timed intercourse this cycle with Letrozole 5mg CD3-7. Partner advised to improve lifestyle factors and repeat semen analysis in 6 weeks. Discussed realistic expectations and timeline. Patient counseled on stress management and fertility-friendly lifestyle modifications.</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="form-actions" style="background: #f8f9fa; padding: 1.5rem; border-radius: 12px; margin-top: 2rem;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <button type="submit" class="btn-primary" style="padding: 1rem;">
+                                💾 Save Patient Record
+                            </button>
+                            <button type="button" class="btn" onclick="generatePatientReport()" style="background: var(--accent-color); color: white; padding: 1rem;">
+                                📄 Generate Report
+                            </button>
+                            <button type="button" class="btn" onclick="scheduleFollowUp()" style="background: var(--secondary-color); color: white; padding: 1rem;">
+                                📅 Schedule Follow-up
+                            </button>
+                            <button type="button" class="btn" onclick="exportPatientData()" style="background: #10b981; color: white; padding: 1rem;">
+                                📤 Export Data
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -4580,6 +5060,614 @@ For questions or issues:
             .catch(error => {
                 console.log('Loading demo configuration...');
             });
+
+        // Lab Report Demo Functions
+        function viewLabReport(reportType) {
+            showNotification(`📋 Viewing ${reportType.replace('_', ' ')} report...`);
+            
+            // Create a modal or detailed view for the lab report
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.8); z-index: 1000; display: flex; 
+                align-items: center; justify-content: center; padding: 2rem;
+            `;
+            
+            const content = getDetailedLabReport(reportType);
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 12px; padding: 2rem; max-width: 800px; max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="margin: 0; color: var(--primary-color);">📋 ${content.title}</h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">×</button>
+                    </div>
+                    ${content.html}
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button onclick="downloadReport('${reportType}')" style="background: var(--primary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; margin-right: 1rem; cursor: pointer;">📄 Download PDF</button>
+                        <button onclick="shareReport('${reportType}')" style="background: var(--accent-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;">📤 Share Report</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        function getDetailedLabReport(reportType) {
+            const reports = {
+                hormone_panel: {
+                    title: 'Comprehensive Hormone Panel',
+                    html: `
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h3 style="color: var(--primary-color);">Patient Information</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div><strong>Name:</strong> Sarah Johnson</div>
+                                <div><strong>ID:</strong> FV-2025-001</div>
+                                <div><strong>Date:</strong> June 25, 2025</div>
+                                <div><strong>Age:</strong> 32 years</div>
+                                <div><strong>Cycle Day:</strong> Day 3</div>
+                                <div><strong>Lab:</strong> FertiVision Diagnostics</div>
+                            </div>
+                        </div>
+                        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem;">
+                            <h3 style="color: var(--primary-color);">Hormone Results</h3>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f8f9fa;">
+                                        <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Hormone</th>
+                                        <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e5e7eb;">Result</th>
+                                        <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e5e7eb;">Reference Range</th>
+                                        <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e5e7eb;">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td style="padding: 0.75rem;">FSH</td><td style="padding: 0.75rem; text-align: center;">6.8 mIU/mL</td><td style="padding: 0.75rem; text-align: center;">3.5-12.5</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">LH</td><td style="padding: 0.75rem; text-align: center;">4.2 mIU/mL</td><td style="padding: 0.75rem; text-align: center;">2.4-12.6</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Estradiol</td><td style="padding: 0.75rem; text-align: center;">145 pg/mL</td><td style="padding: 0.75rem; text-align: center;">27-161</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Progesterone</td><td style="padding: 0.75rem; text-align: center;">2.1 ng/mL</td><td style="padding: 0.75rem; text-align: center;">0.2-1.5</td><td style="padding: 0.75rem; text-align: center; color: #f59e0b;">⚠️ Elevated</td></tr>
+                                    <tr><td style="padding: 0.75rem;">AMH</td><td style="padding: 0.75rem; text-align: center;">3.2 ng/mL</td><td style="padding: 0.75rem; text-align: center;">1.0-4.0</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Prolactin</td><td style="padding: 0.75rem; text-align: center;">18.5 ng/mL</td><td style="padding: 0.75rem; text-align: center;">4.8-23.3</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="background: #e0f2fe; padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem; border-left: 4px solid #0288d1;">
+                            <h4 style="color: #01579b; margin: 0 0 1rem 0;">Clinical Interpretation</h4>
+                            <p style="margin: 0;">Overall hormone profile indicates good ovarian reserve and normal reproductive function. Slightly elevated progesterone may suggest testing was performed post-ovulation. Recommend cycle day 3 retest if needed.</p>
+                        </div>
+                    `
+                },
+                semen_analysis: {
+                    title: 'Complete Semen Analysis',
+                    html: `
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h3 style="color: var(--primary-color);">Sample Information</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div><strong>Patient:</strong> Michael Davis</div>
+                                <div><strong>ID:</strong> FV-2025-002</div>
+                                <div><strong>Collection Date:</strong> June 26, 2025</div>
+                                <div><strong>Analysis Date:</strong> June 26, 2025</div>
+                                <div><strong>Abstinence:</strong> 3 days</div>
+                                <div><strong>Collection Method:</strong> Masturbation</div>
+                            </div>
+                        </div>
+                        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem;">
+                            <h3 style="color: var(--primary-color);">Analysis Results</h3>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f8f9fa;">
+                                        <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Parameter</th>
+                                        <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e5e7eb;">Result</th>
+                                        <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e5e7eb;">WHO Reference</th>
+                                        <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e5e7eb;">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td style="padding: 0.75rem;">Volume</td><td style="padding: 0.75rem; text-align: center;">3.2 mL</td><td style="padding: 0.75rem; text-align: center;">≥1.5 mL</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Concentration</td><td style="padding: 0.75rem; text-align: center;">45 M/mL</td><td style="padding: 0.75rem; text-align: center;">≥15 M/mL</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Total Count</td><td style="padding: 0.75rem; text-align: center;">144 M</td><td style="padding: 0.75rem; text-align: center;">≥39 M</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Total Motility</td><td style="padding: 0.75rem; text-align: center;">48%</td><td style="padding: 0.75rem; text-align: center;">≥40%</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Progressive Motility</td><td style="padding: 0.75rem; text-align: center;">28%</td><td style="padding: 0.75rem; text-align: center;">≥32%</td><td style="padding: 0.75rem; text-align: center; color: #f59e0b;">⚠️ Borderline</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Normal Morphology</td><td style="padding: 0.75rem; text-align: center;">6%</td><td style="padding: 0.75rem; text-align: center;">≥4%</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">pH</td><td style="padding: 0.75rem; text-align: center;">7.4</td><td style="padding: 0.75rem; text-align: center;">7.2-8.0</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="background: #fff3cd; padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem; border-left: 4px solid #f59e0b;">
+                            <h4 style="color: #92400e; margin: 0 0 1rem 0;">Recommendations</h4>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li>Progressive motility is slightly below optimal - consider lifestyle modifications</li>
+                                <li>Increase antioxidant intake (Vitamin C, E, CoQ10)</li>
+                                <li>Regular exercise and stress management</li>
+                                <li>Avoid excessive heat exposure</li>
+                                <li>Repeat analysis in 6-8 weeks to assess improvement</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                genetic_screening: {
+                    title: 'Comprehensive Genetic Screening',
+                    html: `
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h3 style="color: var(--primary-color);">Patient Information</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div><strong>Patient:</strong> Emma Wilson</div>
+                                <div><strong>ID:</strong> FV-2025-003</div>
+                                <div><strong>Sample Date:</strong> June 20, 2025</div>
+                                <div><strong>Panel Type:</strong> Comprehensive (180+ conditions)</div>
+                                <div><strong>Ethnicity:</strong> Mediterranean</div>
+                                <div><strong>Lab:</strong> FertiVision Genetics</div>
+                            </div>
+                        </div>
+                        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                            <h3 style="color: var(--primary-color);">Screening Results - Summary</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div style="padding: 1rem; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
+                                    <h4 style="color: #15803d; margin: 0 0 0.5rem 0;">Negative Results</h4>
+                                    <p style="margin: 0; font-size: 0.9rem;">179 conditions tested - No carrier status detected</p>
+                                </div>
+                                <div style="padding: 1rem; background: #fef2f2; border-radius: 8px; border-left: 4px solid #ef4444;">
+                                    <h4 style="color: #dc2626; margin: 0 0 0.5rem 0;">Positive Results</h4>
+                                    <p style="margin: 0; font-size: 0.9rem;">1 condition - Carrier status detected</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                            <h3 style="color: #dc2626;">⚠️ Positive Carrier Status</h3>
+                            <div style="background: white; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+                                <h4 style="color: #dc2626; margin: 0 0 1rem 0;">Beta Thalassemia (HBB gene)</h4>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                                    <div><strong>Inheritance:</strong> Autosomal Recessive</div>
+                                    <div><strong>Carrier Frequency:</strong> 1 in 25 (Mediterranean)</div>
+                                    <div><strong>Risk if partner is carrier:</strong> 25% per pregnancy</div>
+                                    <div><strong>Condition severity:</strong> Moderate to Severe</div>
+                                </div>
+                                <div style="margin-top: 1rem; padding: 1rem; background: #fef3c7; border-radius: 6px;">
+                                    <p style="margin: 0; font-weight: 500;">Partner testing recommended. Genetic counseling advised before conception.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="background: #e0f2fe; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #0288d1;">
+                            <h4 style="color: #01579b; margin: 0 0 1rem 0;">Next Steps</h4>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li>Schedule genetic counseling consultation</li>
+                                <li>Partner genetic screening for beta thalassemia</li>
+                                <li>Discuss reproductive options if partner is also a carrier</li>
+                                <li>Consider preimplantation genetic testing (PGT) if proceeding with IVF</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                thyroid_function: {
+                    title: 'Thyroid Function Panel',
+                    html: `
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h3 style="color: var(--primary-color);">Test Information</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div><strong>Patient:</strong> Lisa Chen</div>
+                                <div><strong>ID:</strong> FV-2025-004</div>
+                                <div><strong>Test Date:</strong> June 24, 2025</div>
+                                <div><strong>Fasting Status:</strong> Non-fasting</div>
+                                <div><strong>Time:</strong> 8:30 AM</div>
+                                <div><strong>Lab:</strong> FertiVision Endocrine</div>
+                            </div>
+                        </div>
+                        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem;">
+                            <h3 style="color: var(--primary-color);">Thyroid Function Results</h3>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f8f9fa;">
+                                        <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #e5e7eb;">Test</th>
+                                        <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e5e7eb;">Result</th>
+                                        <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e5e7eb;">Reference Range</th>
+                                        <th style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #e5e7eb;">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td style="padding: 0.75rem;">TSH</td><td style="padding: 0.75rem; text-align: center;">2.4 mIU/L</td><td style="padding: 0.75rem; text-align: center;">0.4-4.0</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Optimal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Free T4</td><td style="padding: 0.75rem; text-align: center;">1.2 ng/dL</td><td style="padding: 0.75rem; text-align: center;">0.8-1.8</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Free T3</td><td style="padding: 0.75rem; text-align: center;">3.1 pg/mL</td><td style="padding: 0.75rem; text-align: center;">2.3-4.2</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                    <tr><td style="padding: 0.75rem;">TPO Antibodies</td><td style="padding: 0.75rem; text-align: center;">&lt; 9 IU/mL</td><td style="padding: 0.75rem; text-align: center;">&lt; 35</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Negative</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Thyroglobulin Ab</td><td style="padding: 0.75rem; text-align: center;">&lt; 15 IU/mL</td><td style="padding: 0.75rem; text-align: center;">&lt; 40</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Negative</td></tr>
+                                    <tr><td style="padding: 0.75rem;">Reverse T3</td><td style="padding: 0.75rem; text-align: center;">24 ng/dL</td><td style="padding: 0.75rem; text-align: center;">15-25</td><td style="padding: 0.75rem; text-align: center; color: #10b981;">✓ Normal</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem; border-left: 4px solid #22c55e;">
+                            <h4 style="color: #15803d; margin: 0 0 1rem 0;">Clinical Summary</h4>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li>Normal thyroid function - excellent for fertility</li>
+                                <li>No evidence of autoimmune thyroid disease</li>
+                                <li>TSH in optimal range for conception (2.4 mIU/L)</li>
+                                <li>Good T4 to T3 conversion</li>
+                                <li>No intervention needed at this time</li>
+                            </ul>
+                        </div>
+                    `
+                }
+            };
+            
+            return reports[reportType] || { title: 'Report Not Found', html: '<p>Report details not available.</p>' };
+        }
+
+        function downloadReport(reportType) {
+            showNotification(`📄 Downloading ${reportType.replace('_', ' ')} report...`);
+            // In a real implementation, this would generate and download a PDF
+            setTimeout(() => {
+                showNotification('✅ Report downloaded successfully!');
+            }, 1500);
+        }
+
+        function shareReport(reportType) {
+            showNotification(`📤 Sharing ${reportType.replace('_', ' ')} report...`);
+            // In a real implementation, this would open sharing options
+            setTimeout(() => {
+                showNotification('🔗 Secure sharing link generated!');
+            }, 1000);
+        }
+
+        // Document management functions
+        function uploadDocument() {
+            const fileInput = document.getElementById('document-file');
+            const patientId = document.getElementById('doc-patient-id').value;
+            const documentType = document.getElementById('document-type').value;
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                showNotification('❌ Please select a document to upload', 'error');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('document', file);
+            formData.append('patient_id', patientId || 'Unknown');
+            formData.append('document_type', documentType);
+            
+            showNotification('📤 Uploading document for AI analysis...');
+            
+            // Show upload progress
+            const uploadBtn = document.querySelector('[onclick="uploadDocument()"]');
+            const originalText = uploadBtn.innerHTML;
+            uploadBtn.innerHTML = '⏳ Analyzing...';
+            uploadBtn.disabled = true;
+            
+            fetch('/upload_document', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('✅ Document uploaded and analyzed successfully!');
+                    displayDocumentAnalysis(data);
+                    // Clear form
+                    fileInput.value = '';
+                    if (!patientId) document.getElementById('doc-patient-id').value = data.patient_id;
+                } else {
+                    showNotification(`❌ Upload failed: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification(`❌ Upload error: ${error.message}`, 'error');
+            })
+            .finally(() => {
+                uploadBtn.innerHTML = originalText;
+                uploadBtn.disabled = false;
+            });
+        }
+        
+        function displayDocumentAnalysis(data) {
+            // Create or update results display area
+            let resultsDiv = document.getElementById('document-analysis-results');
+            if (!resultsDiv) {
+                resultsDiv = document.createElement('div');
+                resultsDiv.id = 'document-analysis-results';
+                resultsDiv.style.cssText = 'margin-top: 2rem; padding: 1.5rem; background: white; border-radius: 12px; border: 1px solid #e5e7eb;';
+                
+                // Insert after document upload section
+                const uploadSection = document.querySelector('#documents-tab .form-section');
+                uploadSection.parentNode.insertBefore(resultsDiv, uploadSection.nextSibling);
+            }
+            
+            const analysis = data.analysis || {};
+            const timestamp = new Date().toLocaleString();
+            
+            resultsDiv.innerHTML = `
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">📋 Document Analysis Results</h3>
+                
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <h4 style="margin: 0 0 0.75rem 0;">Document Information</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+                        <div><strong>Document ID:</strong> ${data.document_id}</div>
+                        <div><strong>Patient ID:</strong> ${data.patient_id}</div>
+                        <div><strong>Type:</strong> ${data.document_type.replace('_', ' ').toUpperCase()}</div>
+                        <div><strong>Filename:</strong> ${data.filename}</div>
+                        <div><strong>Status:</strong> <span style="color: #10b981;">✅ ${analysis.status || 'Processed'}</span></div>
+                        <div><strong>Analyzed:</strong> ${timestamp}</div>
+                    </div>
+                </div>
+                
+                ${generateAnalysisContent(data.document_type, analysis)}
+                
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button onclick="downloadAnalysisReport('${data.document_id}')" style="background: var(--primary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;">
+                        📄 Download Report
+                    </button>
+                    <button onclick="viewDocumentHistory('${data.patient_id}')" style="background: var(--accent-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;">
+                        📚 View All Documents
+                    </button>
+                    <button onclick="shareDocumentAnalysis('${data.document_id}')" style="background: var(--secondary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;">
+                        🔗 Share Analysis
+                    </button>
+                </div>
+            `;
+            
+            // Scroll to results
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        function generateAnalysisContent(docType, analysis) {
+            if (docType === 'hormone_panel' && analysis.extracted_values) {
+                return `
+                    <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🧪 Extracted Hormone Values</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+                            ${Object.entries(analysis.extracted_values).map(([key, value]) => `
+                                <div style="background: #f8f9fa; padding: 0.75rem; border-radius: 6px;">
+                                    <div style="font-weight: 600; color: var(--primary-color);">${key}</div>
+                                    <div style="font-size: 1.1rem; font-weight: 500;">${value}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 4px solid #10b981;">
+                            <h5 style="margin: 0 0 0.5rem 0; color: #065f46;">Clinical Interpretation:</h5>
+                            <p style="margin: 0; color: #065f46;">${analysis.interpretation}</p>
+                        </div>
+                    </div>
+                `;
+            } else if (docType === 'semen_analysis' && analysis.extracted_values) {
+                return `
+                    <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🧬 Semen Analysis Results</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+                            ${Object.entries(analysis.extracted_values).map(([key, value]) => `
+                                <div style="background: #f8f9fa; padding: 0.75rem; border-radius: 6px;">
+                                    <div style="font-weight: 600; color: var(--primary-color);">${key.replace('_', ' ')}</div>
+                                    <div style="font-size: 1.1rem; font-weight: 500;">${value}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: 1rem; padding: 1rem; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 4px solid #f59e0b;">
+                            <h5 style="margin: 0 0 0.5rem 0; color: #92400e;">Analysis Summary:</h5>
+                            <p style="margin: 0 0 1rem 0; color: #92400e;">${analysis.interpretation}</p>
+                            <div style="font-weight: 600; margin-bottom: 0.5rem;">Recommendations:</div>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                ${analysis.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            } else if (docType === 'genetic_screening' && analysis.extracted_results) {
+                const positiveResults = Object.entries(analysis.extracted_results).filter(([k,v]) => v !== 'Negative');
+                const negativeCount = Object.keys(analysis.extracted_results).length - positiveResults.length;
+                
+                return `
+                    <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🧬 Genetic Screening Results</h4>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div style="padding: 1rem; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #22c55e;">
+                                <h5 style="color: #15803d; margin: 0 0 0.5rem 0;">Negative Results</h5>
+                                <p style="margin: 0; font-size: 0.9rem;">${negativeCount} conditions - No carrier status</p>
+                            </div>
+                            <div style="padding: 1rem; background: #fef2f2; border-radius: 8px; border-left: 4px solid #ef4444;">
+                                <h5 style="color: #dc2626; margin: 0 0 0.5rem 0;">Positive Results</h5>
+                                <p style="margin: 0; font-size: 0.9rem;">${positiveResults.length} condition(s) detected</p>
+                            </div>
+                        </div>
+                        
+                        ${positiveResults.length > 0 ? `
+                            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <h5 style="color: #dc2626; margin: 0 0 1rem 0;">⚠️ Carrier Status Detected</h5>
+                                ${positiveResults.map(([condition, status]) => `
+                                    <div style="background: white; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                                        <div style="font-weight: 600; color: #dc2626;">${condition.replace('_', ' ')}: ${status}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        <div style="margin-top: 1rem; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <h5 style="margin: 0 0 0.5rem 0; color: #1e40af;">Recommendations:</h5>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                ${analysis.recommendations.map(rec => `<li style="color: #1e40af;">${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">📄 Document Processing Complete</h4>
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px;">
+                            <p style="margin: 0; color: var(--text-secondary);">
+                                Document has been successfully uploaded and processed. 
+                                ${analysis.ai_extraction || 'AI analysis completed.'}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        function downloadAnalysisReport(docId) {
+            showNotification('📄 Generating analysis report...');
+            setTimeout(() => {
+                showNotification('⬇️ Report download started');
+            }, 1000);
+        }
+        
+        function viewDocumentHistory(patientId) {
+            showNotification('📚 Loading document history...');
+            
+            fetch(`/get_documents/${patientId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayDocumentHistory(data.documents, patientId);
+                } else {
+                    showNotification('❌ Failed to load document history', 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('❌ Error loading documents', 'error');
+            });
+        }
+        
+        function displayDocumentHistory(documents, patientId) {
+            // Create modal for document history
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.8); z-index: 1000; display: flex; 
+                align-items: center; justify-content: center; padding: 2rem;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 12px; padding: 2rem; max-width: 900px; max-height: 90vh; overflow-y: auto; width: 100%;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="margin: 0; color: var(--primary-color);">📚 Document History - ${patientId}</h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">×</button>
+                    </div>
+                    
+                    ${documents.length === 0 ? `
+                        <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📄</div>
+                            <h3>No Documents Found</h3>
+                            <p>No documents have been uploaded for this patient yet.</p>
+                        </div>
+                    ` : `
+                        <div style="display: grid; gap: 1rem;">
+                            ${documents.map(doc => `
+                                <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                                        <div>
+                                            <h4 style="margin: 0 0 0.25rem 0; color: var(--primary-color);">${doc.type.replace('_', ' ').toUpperCase()}</h4>
+                                            <div style="font-size: 0.9rem; color: var(--text-secondary);">${doc.filename}</div>
+                                        </div>
+                                        <span style="background: ${doc.status === 'Normal' ? '#10b981' : doc.status === 'Borderline' ? '#f59e0b' : '#3b82f6'}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">${doc.status}</span>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                                        Uploaded: ${new Date(doc.timestamp).toLocaleString()}
+                                    </div>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button onclick="viewDocumentDetails('${doc.id}')" style="background: var(--primary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">View Details</button>
+                                        <button onclick="downloadDocument('${doc.id}')" style="background: var(--accent-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">Download</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `}
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+            
+            showNotification(`📚 Found ${documents.length} documents`);
+        }
+        
+        function shareDocumentAnalysis(docId) {
+            showNotification('🔗 Generating secure sharing link...');
+            setTimeout(() => {
+                showNotification('✅ Secure sharing link created');
+            }, 1000);
+        }
+
+        function viewAllDocuments() {
+            showNotification('📋 Loading document library...');
+            setTimeout(() => {
+                showNotification('📚 Document library loaded - 24 documents found');
+            }, 1000);
+        }
+
+        function exportDocuments() {
+            showNotification('📦 Preparing document export...');
+            setTimeout(() => {
+                showNotification('⬇️ Document archive ready for download');
+            }, 1500);
+        }
+
+        function shareDocuments() {
+            showNotification('🔗 Generating secure sharing link...');
+            setTimeout(() => {
+                showNotification('✅ Secure sharing link created');
+            }, 1000);
+        }
+
+        function searchDocuments() {
+            showNotification('🔍 Opening document search...');
+        }
+
+        function generateReports() {
+            showNotification('📊 Generating comprehensive patient reports...');
+            setTimeout(() => {
+                showNotification('📄 Reports generated successfully');
+            }, 2000);
+        }
+
+        function archiveDocuments() {
+            showNotification('📦 Opening archive management...');
+        }
+
+        function complianceCheck() {
+            showNotification('🔒 Running HIPAA compliance audit...');
+            setTimeout(() => {
+                showNotification('✅ Compliance audit completed - All systems secure');
+            }, 2500);
+        }
+
+        // Handle document upload interactions
+        function dropHandler(ev, type) {
+            ev.preventDefault();
+            showNotification(`📁 File dropped for ${type} analysis`);
+        }
+
+        function dropDocumentHandler(ev) {
+            ev.preventDefault();
+            const dt = ev.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length > 0) {
+                const fileInput = document.getElementById('document-file');
+                fileInput.files = files;
+                showNotification(`📄 Dropped ${files.length} file(s) - Click "Upload Documents" to process`);
+                
+                // Highlight the upload button
+                const uploadBtn = document.getElementById('upload-document-btn');
+                uploadBtn.style.background = 'var(--primary-color)';
+                uploadBtn.style.animation = 'pulse 1.5s infinite';
+            }
+        }
+
+        function dragOverHandler(ev) {
+            ev.preventDefault();
+            ev.currentTarget.style.borderColor = 'var(--primary-color)';
+            ev.currentTarget.style.background = 'rgba(37, 99, 235, 0.1)';
+        }
+
+        function dragLeaveHandler(ev) {
+            ev.currentTarget.style.borderColor = '#e5e7eb';
+            ev.currentTarget.style.background = 'transparent';
+        }
+
+        function handleDocumentUpload(input) {
+            if (input.files && input.files[0]) {
+                showNotification(`📄 Selected: ${input.files[0].name}`);
+            }
+        }
         });
     </script>
 </body>

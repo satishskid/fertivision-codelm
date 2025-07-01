@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FertiVision Document Upload Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { border: 1px solid #ccc; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .warning { background: #fff3cd; border-color: #ffeaa7; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>FertiVision Document Upload Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Upload Endpoint Availability</h2>
+        <button onclick="testEndpoint()">Test /upload_document endpoint</button>
+        <div id="endpoint-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: File Upload with Form Data</h2>
+        <form id="upload-form">
+            <input type="file" id="test-file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+            <br><br>
+            <label>Patient ID: <input type="text" id="patient-id" value="TEST-001"></label>
+            <br><br>
+            <label>Document Type: 
+                <select id="doc-type">
+                    <option value="hormone_panel">Hormone Panel</option>
+                    <option value="semen_analysis">Semen Analysis</option>
+                    <option value="genetic_screening">Genetic Screening</option>
+                    <option value="thyroid_function">Thyroid Function</option>
+                </select>
+            </label>
+            <br><br>
+            <button type="button" onclick="testUpload()">Upload Document</button>
+        </form>
+        <div id="upload-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Document Retrieval</h2>
+        <button onclick="testRetrieval('TEST-001')">Get Documents for TEST-001</button>
+        <div id="retrieval-result"></div>
+    </div>
+
+    <script>
+        function testEndpoint() {
+            fetch('/upload_document', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('endpoint-result').innerHTML = 
+                    `<div class="success">✅ Endpoint available! Response: ${JSON.stringify(data)}</div>`;
+            })
+            .catch(error => {
+                document.getElementById('endpoint-result').innerHTML = 
+                    `<div class="error">❌ Endpoint error: ${error.message}</div>`;
+            });
+        }
+
+        function testUpload() {
+            const fileInput = document.getElementById('test-file');
+            const patientId = document.getElementById('patient-id').value;
+            const docType = document.getElementById('doc-type').value;
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                document.getElementById('upload-result').innerHTML = 
+                    '<div class="warning">⚠️ Please select a file first</div>';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('document', fileInput.files[0]);
+            formData.append('patient_id', patientId);
+            formData.append('document_type', docType);
+
+            document.getElementById('upload-result').innerHTML = 
+                '<div class="warning">⏳ Uploading...</div>';
+
+            fetch('/upload_document', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('upload-result').innerHTML = 
+                        `<div class="success">✅ Upload successful!<br>
+                        Document ID: ${data.document_id}<br>
+                        Status: ${data.analysis.status}<br>
+                        <pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+                } else {
+                    document.getElementById('upload-result').innerHTML = 
+                        `<div class="error">❌ Upload failed: ${data.error}</div>`;
+                }
+            })
+            .catch(error => {
+                document.getElementById('upload-result').innerHTML = 
+                    `<div class="error">❌ Upload error: ${error.message}</div>`;
+            });
+        }
+
+        function testRetrieval(patientId) {
+            document.getElementById('retrieval-result').innerHTML = 
+                '<div class="warning">⏳ Loading documents...</div>';
+
+            fetch(`/get_documents/${patientId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('retrieval-result').innerHTML = 
+                        `<div class="success">✅ Found ${data.documents.length} documents<br>
+                        <pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+                } else {
+                    document.getElementById('retrieval-result').innerHTML = 
+                        `<div class="error">❌ Retrieval failed</div>`;
+                }
+            })
+            .catch(error => {
+                document.getElementById('retrieval-result').innerHTML = 
+                    `<div class="error">❌ Retrieval error: ${error.message}</div>`;
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient History & Document Analysis - FertiVision</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .patient-history-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .patient-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+        
+        .patient-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .patient-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .patient-id {
+            font-size: 14px;
+            color: #666;
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-icon {
+            color: #667eea;
+            width: 20px;
+        }
+        
+        .document-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .document-upload {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .document-upload:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .document-upload.dragover {
+            border-color: #5a6fd8;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .document-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .document-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .document-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .document-type {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .fertility-score {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .score-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .score-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .score-item .score {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background: #cce7ff;
+            color: #004085;
+            border: 1px solid #b3d7ff;
+        }
+        
+        @media (max-width: 768px) {
+            .patient-history-container {
+                padding: 10px;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .patient-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .score-breakdown {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="patient-history-container">
+        <!-- Header -->
+        <div class="header-section">
+            <h1><i class="fas fa-user-md"></i> Patient History & Document Analysis</h1>
+            <p>Comprehensive fertility assessment and medical document management</p>
+            <a href="/" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Main Dashboard</a>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="patients">
+                <i class="fas fa-users"></i> Patient Management
+            </div>
+            <div class="nav-tab" data-tab="upload">
+                <i class="fas fa-upload"></i> Document Upload
+            </div>
+            <div class="nav-tab" data-tab="analysis">
+                <i class="fas fa-chart-line"></i> Analysis & Reports
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alert-container"></div>
+
+        <!-- Patient Management Tab -->
+        <div id="patients-tab" class="tab-content active">
+            <div class="form-section">
+                <h2><i class="fas fa-user-plus"></i> Create New Patient</h2>
+                <form id="create-patient-form">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">Patient Name</label>
+                            <input type="text" id="patient_name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" id="date_of_birth" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Gender</label>
+                            <select id="gender" class="form-input" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" id="contact_number" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="email" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Medical ID</label>
+                            <input type="text" id="medical_id" class="form-input">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Patient
+                    </button>
+                </form>
+            </div>
+
+            <!-- Patient List -->
+            <div class="form-section">
+                <h2><i class="fas fa-users"></i> Patient Records</h2>
+                <div id="patients-list">
+                    <div class="loading"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Upload Tab -->
+        <div id="upload-tab" class="tab-content">
+            <div class="form-section">
+                <h2><i class="fas fa-upload"></i> Upload Medical Documents</h2>
+                
+                <!-- Patient Selection -->
+                <div class="form-group">
+                    <label class="form-label">Select Patient</label>
+                    <select id="upload-patient-select" class="form-input" required>
+                        <option value="">Choose a patient...</option>
+                    </select>
+                </div>
+
+                <!-- Document Type Selection -->
+                <div class="form-group">
+                    <label class="form-label">Document Type</label>
+                    <select id="document-type" class="form-input" required>
+                        <option value="">Select document type...</option>
+                        <option value="lab_report">Lab Report</option>
+                        <option value="ultrasound_image">Ultrasound Image</option>
+                        <option value="microscopy_image">Microscopy Image</option>
+                        <option value="medical_report">Medical Report</option>
+                        <option value="prescription">Prescription</option>
+                        <option value="consultation_notes">Consultation Notes</option>
+                        <option value="surgical_report">Surgical Report</option>
+                        <option value="imaging_study">Imaging Study</option>
+                        <option value="pathology_report">Pathology Report</option>
+                        <option value="hormone_panel">Hormone Panel</option>
+                    </select>
+                </div>
+
+                <!-- File Upload Area -->
+                <div class="document-upload" id="document-upload-area">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #667eea; margin-bottom: 15px;"></i>
+                    <h3>Drag & Drop Documents Here</h3>
+                    <p>Or click to browse files</p>
+                    <p><small>Supported formats: PDF, JPG, PNG, TIFF (Max 10MB)</small></p>
+                    <input type="file" id="document-file-input" style="display: none;" accept=".pdf,.jpg,.jpeg,.png,.tiff,.tif" multiple>
+                </div>
+
+                <button id="upload-documents-btn" class="btn btn-success" style="margin-top: 20px;" disabled>
+                    <i class="fas fa-upload"></i> Upload & Analyze Documents
+                </button>
+            </div>
+        </div>
+
+        <!-- Analysis & Reports Tab -->
+        <div id="analysis-tab" class="tab-content">
+            <div class="form-section">
+                <h2><i class="fas fa-chart-line"></i> Fertility Analysis & Reports</h2>
+                
+                <!-- Patient Selection for Analysis -->
+                <div class="form-group">
+                    <label class="form-label">Select Patient for Analysis</label>
+                    <select id="analysis-patient-select" class="form-input">
+                        <option value="">Choose a patient...</option>
+                    </select>
+                </div>
+
+                <div id="patient-analysis-results" style="display: none;">
+                    <!-- Fertility Score Display -->
+                    <div class="fertility-score">
+                        <div class="score-value" id="overall-fertility-score">--</div>
+                        <div>Overall Fertility Score</div>
+                    </div>
+
+                    <!-- Score Breakdown -->
+                    <div class="score-breakdown" id="score-breakdown">
+                        <!-- Dynamically populated -->
+                    </div>
+
+                    <!-- Export Options -->
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button id="export-pdf-btn" class="btn btn-primary">
+                            <i class="fas fa-file-pdf"></i> Export PDF Report
+                        </button>
+                        <button id="refresh-analysis-btn" class="btn btn-success">
+                            <i class="fas fa-sync"></i> Refresh Analysis
+                        </button>
+                    </div>
+
+                    <!-- Documents List for Selected Patient -->
+                    <div class="document-section">
+                        <h3><i class="fas fa-file-medical"></i> Patient Documents</h3>
+                        <div id="patient-documents-list" class="document-list">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let patients = [];
+        let selectedFiles = [];
+        let currentPatient = null;
+
+        // DOM elements
+        const createPatientForm = document.getElementById('create-patient-form');
+        const patientsListDiv = document.getElementById('patients-list');
+        const uploadPatientSelect = document.getElementById('upload-patient-select');
+        const analysisPatientSelect = document.getElementById('analysis-patient-select');
+        const documentUploadArea = document.getElementById('document-upload-area');
+        const documentFileInput = document.getElementById('document-file-input');
+        const uploadDocumentsBtn = document.getElementById('upload-documents-btn');
+        const patientAnalysisResults = document.getElementById('patient-analysis-results');
+        const alertContainer = document.getElementById('alert-container');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            setupEventListeners();
+            loadPatients();
+        }
+
+        function setupEventListeners() {
+            // Tab navigation
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                });
+            });
+
+            // Create patient form
+            createPatientForm.addEventListener('submit', handleCreatePatient);
+
+            // File upload
+            documentUploadArea.addEventListener('click', () => documentFileInput.click());
+            documentUploadArea.addEventListener('dragover', handleDragOver);
+            documentUploadArea.addEventListener('drop', handleFileDrop);
+            documentFileInput.addEventListener('change', handleFileSelect);
+            uploadDocumentsBtn.addEventListener('click', handleDocumentUpload);
+
+            // Patient selection for analysis
+            analysisPatientSelect.addEventListener('change', handlePatientSelectionForAnalysis);
+
+            // Export buttons
+            document.getElementById('export-pdf-btn').addEventListener('click', handleExportPDF);
+            document.getElementById('refresh-analysis-btn').addEventListener('click', handleRefreshAnalysis);
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        async function loadPatients() {
+            try {
+                showLoading(patientsListDiv);
+                const response = await fetch('/api/patients');
+                const data = await response.json();
+                
+                if (data.success) {
+                    patients = data.patients;
+                    renderPatientsList();
+                    updatePatientSelects();
+                } else {
+                    throw new Error(data.error || 'Failed to load patients');
+                }
+            } catch (error) {
+                showAlert('Error loading patients: ' + error.message, 'error');
+                patientsListDiv.innerHTML = '<p>Error loading patients. Please refresh the page.</p>';
+            }
+        }
+
+        function renderPatientsList() {
+            if (patients.length === 0) {
+                patientsListDiv.innerHTML = '<p>No patients found. Create your first patient above.</p>';
+                return;
+            }
+
+            const patientsHtml = patients.map(patient => {
+                const age = calculateAge(patient.date_of_birth);
+                return `
+                    <div class="patient-card">
+                        <div class="patient-header">
+                            <div class="patient-name">${patient.name}</div>
+                            <div class="patient-id">ID: ${patient.patient_id}</div>
+                        </div>
+                        <div class="patient-info">
+                            <div class="info-item">
+                                <i class="fas fa-birthday-cake info-icon"></i>
+                                <span>Age: ${age} years</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-venus-mars info-icon"></i>
+                                <span>Gender: ${patient.gender}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-phone info-icon"></i>
+                                <span>${patient.contact_number || 'Not provided'}</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-envelope info-icon"></i>
+                                <span>${patient.email || 'Not provided'}</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="viewPatientDetails('${patient.patient_id}')">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                            <button class="btn btn-success" onclick="selectPatientForAnalysis('${patient.patient_id}')">
+                                <i class="fas fa-chart-line"></i> Analyze
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            patientsListDiv.innerHTML = patientsHtml;
+        }
+
+        function updatePatientSelects() {
+            const options = patients.map(patient => 
+                `<option value="${patient.patient_id}">${patient.name} (${patient.medical_id || patient.patient_id})</option>`
+            ).join('');
+
+            uploadPatientSelect.innerHTML = '<option value="">Choose a patient...</option>' + options;
+            analysisPatientSelect.innerHTML = '<option value="">Choose a patient...</option>' + options;
+        }
+
+        async function handleCreatePatient(event) {
+            event.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('patient_name').value,
+                date_of_birth: document.getElementById('date_of_birth').value,
+                gender: document.getElementById('gender').value,
+                contact_number: document.getElementById('contact_number').value,
+                email: document.getElementById('email').value,
+                medical_id: document.getElementById('medical_id').value
+            };
+
+            try {
+                const response = await fetch('/api/patients', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('Patient created successfully!', 'success');
+                    createPatientForm.reset();
+                    loadPatients();
+                } else {
+                    throw new Error(data.error || 'Failed to create patient');
+                }
+            } catch (error) {
+                showAlert('Error creating patient: ' + error.message, 'error');
+            }
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            documentUploadArea.classList.add('dragover');
+        }
+
+        function handleFileDrop(event) {
+            event.preventDefault();
+            documentUploadArea.classList.remove('dragover');
+            const files = Array.from(event.dataTransfer.files);
+            handleFiles(files);
+        }
+
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            selectedFiles = files.filter(file => {
+                const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/tiff'];
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                
+                if (!validTypes.includes(file.type)) {
+                    showAlert(`File ${file.name} has unsupported format`, 'error');
+                    return false;
+                }
+                
+                if (file.size > maxSize) {
+                    showAlert(`File ${file.name} is too large (max 10MB)`, 'error');
+                    return false;
+                }
+                
+                return true;
+            });
+
+            if (selectedFiles.length > 0) {
+                uploadDocumentsBtn.disabled = false;
+                documentUploadArea.innerHTML = `
+                    <i class="fas fa-check-circle" style="font-size: 48px; color: #28a745; margin-bottom: 15px;"></i>
+                    <h3>${selectedFiles.length} file(s) selected</h3>
+                    <p>${selectedFiles.map(f => f.name).join(', ')}</p>
+                `;
+            }
+        }
+
+        async function handleDocumentUpload() {
+            const patientId = uploadPatientSelect.value;
+            const documentType = document.getElementById('document-type').value;
+
+            if (!patientId || !documentType || selectedFiles.length === 0) {
+                showAlert('Please select a patient, document type, and files to upload', 'error');
+                return;
+            }
+
+            try {
+                uploadDocumentsBtn.innerHTML = '<div class="loading"></div> Uploading & Analyzing...';
+                uploadDocumentsBtn.disabled = true;
+
+                for (const file of selectedFiles) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('document_type', documentType);
+
+                    const response = await fetch(`/api/patients/${patientId}/documents`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    
+                    if (!data.success) {
+                        throw new Error(data.error || `Failed to upload ${file.name}`);
+                    }
+                }
+
+                showAlert('Documents uploaded and analyzed successfully!', 'success');
+                resetUploadForm();
+                
+            } catch (error) {
+                showAlert('Error uploading documents: ' + error.message, 'error');
+            } finally {
+                uploadDocumentsBtn.innerHTML = '<i class="fas fa-upload"></i> Upload & Analyze Documents';
+                uploadDocumentsBtn.disabled = false;
+            }
+        }
+
+        function resetUploadForm() {
+            selectedFiles = [];
+            documentFileInput.value = '';
+            document.getElementById('document-type').value = '';
+            uploadDocumentsBtn.disabled = true;
+            documentUploadArea.innerHTML = `
+                <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #667eea; margin-bottom: 15px;"></i>
+                <h3>Drag & Drop Documents Here</h3>
+                <p>Or click to browse files</p>
+                <p><small>Supported formats: PDF, JPG, PNG, TIFF (Max 10MB)</small></p>
+            `;
+        }
+
+        async function handlePatientSelectionForAnalysis() {
+            const patientId = analysisPatientSelect.value;
+            
+            if (!patientId) {
+                patientAnalysisResults.style.display = 'none';
+                return;
+            }
+
+            try {
+                await loadPatientAnalysis(patientId);
+            } catch (error) {
+                showAlert('Error loading patient analysis: ' + error.message, 'error');
+            }
+        }
+
+        async function loadPatientAnalysis(patientId) {
+            try {
+                // Load fertility report
+                const reportResponse = await fetch(`/api/patients/${patientId}/fertility_report`);
+                const reportData = await reportResponse.json();
+                
+                if (reportData.success) {
+                    displayFertilityReport(reportData.report);
+                    patientAnalysisResults.style.display = 'block';
+                    currentPatient = patientId;
+                } else {
+                    throw new Error(reportData.error || 'Failed to load fertility report');
+                }
+                
+                // Load patient documents
+                await loadPatientDocuments(patientId);
+                
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        function displayFertilityReport(report) {
+            // Overall score
+            document.getElementById('overall-fertility-score').textContent = 
+                report.overall_score ? report.overall_score.toFixed(1) : '--';
+
+            // Score breakdown
+            const scoreBreakdown = document.getElementById('score-breakdown');
+            if (report.domain_scores && Object.keys(report.domain_scores).length > 0) {
+                const breakdownHtml = Object.entries(report.domain_scores).map(([domain, score]) => `
+                    <div class="score-item">
+                        <h4>${domain.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</h4>
+                        <div class="score">${score.toFixed(1)}</div>
+                    </div>
+                `).join('');
+                scoreBreakdown.innerHTML = breakdownHtml;
+            } else {
+                scoreBreakdown.innerHTML = '<p>No domain scores available. Upload documents for detailed analysis.</p>';
+            }
+        }
+
+        async function loadPatientDocuments(patientId) {
+            try {
+                const response = await fetch(`/api/patients/${patientId}`);
+                const data = await response.json();
+                
+                if (data.success && data.patient.documents) {
+                    displayPatientDocuments(data.patient.documents);
+                }
+            } catch (error) {
+                console.error('Error loading patient documents:', error);
+            }
+        }
+
+        function displayPatientDocuments(documents) {
+            const documentsListDiv = document.getElementById('patient-documents-list');
+            
+            if (documents.length === 0) {
+                documentsListDiv.innerHTML = '<p>No documents uploaded for this patient.</p>';
+                return;
+            }
+
+            const documentsHtml = documents.map(doc => `
+                <div class="document-item">
+                    <div class="document-header">
+                        <div class="document-type">${doc.document_type}</div>
+                    </div>
+                    <h4>${doc.file_name || 'Untitled Document'}</h4>
+                    <p><strong>Uploaded:</strong> ${new Date(doc.created_at).toLocaleDateString()}</p>
+                    <p><strong>Key Findings:</strong> ${doc.key_findings ? doc.key_findings.slice(0, 2).join(', ') : 'Processing...'}</p>
+                    ${doc.confidence_score ? `<p><strong>Confidence:</strong> ${(doc.confidence_score * 100).toFixed(1)}%</p>` : ''}
+                </div>
+            `).join('');
+
+            documentsListDiv.innerHTML = documentsHtml;
+        }
+
+        async function handleExportPDF() {
+            if (!currentPatient) {
+                showAlert('Please select a patient first', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/patients/${currentPatient}/export_report`);
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `fertility_report_${currentPatient}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    
+                    showAlert('PDF report exported successfully!', 'success');
+                } else {
+                    throw new Error('Failed to export PDF report');
+                }
+            } catch (error) {
+                showAlert('Error exporting PDF: ' + error.message, 'error');
+            }
+        }
+
+        async function handleRefreshAnalysis() {
+            if (!currentPatient) {
+                showAlert('Please select a patient first', 'error');
+                return;
+            }
+
+            try {
+                await loadPatientAnalysis(currentPatient);
+                showAlert('Analysis refreshed successfully!', 'success');
+            } catch (error) {
+                showAlert('Error refreshing analysis: ' + error.message, 'error');
+            }
+        }
+
+        function selectPatientForAnalysis(patientId) {
+            analysisPatientSelect.value = patientId;
+            switchTab('analysis');
+            handlePatientSelectionForAnalysis();
+        }
+
+        function viewPatientDetails(patientId) {
+            // This could open a modal or navigate to a detailed view
+            selectPatientForAnalysis(patientId);
+        }
+
+        function calculateAge(dateOfBirth) {
+            const today = new Date();
+            const birthDate = new Date(dateOfBirth);
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; font-size: 18px; cursor: pointer;">&times;</button>
+            `;
+            
+            alertContainer.appendChild(alertDiv);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentElement) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        function showLoading(element) {
+            element.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="loading"></div><p>Loading...</p></div>';
+        }
+    </script>
+</body>
+</html>

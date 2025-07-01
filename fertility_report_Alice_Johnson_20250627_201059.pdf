@@ -1,0 +1,4 @@
+{
+  "success": false,
+  "error": "'PatientHistoryManager' object has no attribute 'get_patient_with_documents'"
+}
