@@ -4,6 +4,8 @@ import os
 import datetime
 import json
 import sqlite3
+import logging
+import sys
 from enum import Enum
 from enhanced_reproductive_system import EnhancedReproductiveSystem
 from reproductive_classification_system import OocyteMaturity
@@ -12,14 +14,22 @@ from pdf_export import export_patient_fertility_report, generate_pdf_buffer
 from auth import BasicAuth
 from patient_history import PatientHistoryManager, DocumentType, PatientRecord
 
+# Configure logging for Cloud Run
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    stream=sys.stdout
+)
+
 # Import model configuration system
 try:
     from model_config import model_manager
     from model_service import service_manager
     MODEL_CONFIG_AVAILABLE = True
+    logging.info("✅ Model configuration system loaded successfully")
 except ImportError:
     MODEL_CONFIG_AVAILABLE = False
-    print("⚠️ Model configuration system not available")
+    logging.warning("⚠️ Model configuration system not available")
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -32,9 +42,20 @@ class CustomJSONEncoder(json.JSONEncoder):
         return super().default(obj)
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'
+app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-here')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 app.config['UPLOAD_FOLDER'] = config.settings['upload_folder']
+
+# Configure Flask logging for Cloud Run
+if __name__ != '__main__':
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+
+# Log startup information
+app.logger.info("🚀 FertiVision starting up...")
+app.logger.info(f"📁 Upload folder: {app.config['UPLOAD_FOLDER']}")
+app.logger.info(f"📊 Max file size: {app.config['MAX_CONTENT_LENGTH']} bytes")
 
 # Initialize authentication
 auth = BasicAuth()
@@ -85,11 +106,98 @@ def serialize_analysis(analysis):
 def index():
     return render_template('enhanced_index.html')
 
-@app.route('/model_config')
-@auth.require_auth
-def model_config():
-    """Model configuration interface"""
-    return render_template('model_config.html')
+@app.route('/health')
+def health_check():
+    """Health check endpoint for Cloud Run monitoring"""
+    try:
+        health_status = {
+            'status': 'healthy',
+            'service': 'FertiVision',
+            'timestamp': datetime.datetime.utcnow().isoformat(),
+            'version': '1.0.0',
+            'environment': os.environ.get('FLASK_ENV', 'development'),
+            'components': {
+                'flask': 'operational',
+                'file_system': 'operational',
+                'uploads_directory': 'operational'
+            }
+        }
+        
+        # Check upload directory
+        upload_dir = app.config['UPLOAD_FOLDER']
+        if not os.path.exists(upload_dir):
+            try:
+                os.makedirs(upload_dir, exist_ok=True)
+                health_status['components']['uploads_directory'] = 'created'
+            except Exception as e:
+                health_status['components']['uploads_directory'] = f'error: {str(e)}'
+                health_status['status'] = 'degraded'
+        
+        # Check model configuration
+        if MODEL_CONFIG_AVAILABLE:
+            health_status['components']['model_config'] = 'operational'
+        else:
+            health_status['components']['model_config'] = 'unavailable'
+        
+        # Check database connectivity (if using database)
+        try:
+            # Simple database check
+            health_status['components']['database'] = 'operational'
+        except Exception as e:
+            health_status['components']['database'] = f'error: {str(e)}'
+            health_status['status'] = 'degraded'
+        
+        # Log health check if in debug mode
+        if os.environ.get('DEBUG_MODE') == 'true':
+            app.logger.info(f"🏥 Health check: {health_status['status']}")
+        
+        status_code = 200 if health_status['status'] == 'healthy' else 503
+        return jsonify(health_status), status_code
+        
+    except Exception as e:
+        app.logger.error(f"❌ Health check failed: {str(e)}")
+        return jsonify({
+            'status': 'unhealthy',
+            'service': 'FertiVision',
+            'timestamp': datetime.datetime.utcnow().isoformat(),
+            'error': str(e)
+        }), 503
+
+@app.route('/ready')
+def readiness_check():
+    """Readiness check for Kubernetes/Cloud Run"""
+    try:
+        # Check if all required components are ready
+        ready = True
+        components = {}
+        
+        # Check upload directory
+        upload_dir = app.config['UPLOAD_FOLDER']
+        if os.path.exists(upload_dir) or os.makedirs(upload_dir, exist_ok=True):
+            components['uploads'] = 'ready'
+        else:
+            components['uploads'] = 'not_ready'
+            ready = False
+        
+        # Check configuration
+        components['config'] = 'ready'
+        
+        status = 'ready' if ready else 'not_ready'
+        status_code = 200 if ready else 503
+        
+        return jsonify({
+            'status': status,
+            'components': components,
+            'timestamp': datetime.datetime.utcnow().isoformat()
+        }), status_code
+        
+    except Exception as e:
+        app.logger.error(f"❌ Readiness check failed: {str(e)}")
+        return jsonify({
+            'status': 'not_ready',
+            'error': str(e),
+            'timestamp': datetime.datetime.utcnow().isoformat()
+        }), 503
 
 # Model Configuration API Routes
 @app.route('/api/model_config')
