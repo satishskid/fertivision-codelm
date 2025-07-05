@@ -4,21 +4,32 @@
 echo "🚀 FertiVision - Google Cloud Run Free Deployment"
 echo "================================================"
 
-# Check if gcloud is installed
+# Check if gcloud is installed and configured
 if ! command -v gcloud &> /dev/null; then
-    echo "Installing Google Cloud SDK..."
-    curl https://sdk.cloud.google.com | bash
-    exec -l $SHELL
+    echo "❌ gcloud not found. Run: ./setup-gcloud-simple.sh"
+    exit 1
 fi
 
-# Set project (you'll need to create one)
-echo "📝 Setting up Google Cloud Project..."
-echo "1. Go to https://console.cloud.google.com"
-echo "2. Create a new project (free)"
-echo "3. Enable Cloud Run API"
-echo "4. Run: gcloud auth login"
-echo "5. Run: gcloud config set project YOUR_PROJECT_ID"
+# Check if authenticated
+if ! gcloud auth list --filter=status:ACTIVE --format="value(account)" | head -n1 &> /dev/null; then
+    echo "❌ Not authenticated. Run: gcloud auth login --no-launch-browser"
+    exit 1
+fi
+
+# Check if project is set
+PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
+if [ -z "$PROJECT_ID" ]; then
+    echo "❌ No project set. Run: gcloud config set project YOUR_PROJECT_ID"
+    exit 1
+fi
+
+echo "✅ Using project: $PROJECT_ID"
+echo "✅ Authenticated as: $(gcloud config get-value account)"
 echo ""
+
+# Enable required APIs
+echo "🔌 Enabling required APIs..."
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com --quiet
 
 # Build and deploy with debugging enabled
 echo "🔨 Building and deploying to Cloud Run..."

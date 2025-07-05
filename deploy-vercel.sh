@@ -1,0 +1,21 @@
+#!/bin/bash
+# Vercel Deployment (requires slight app modification)
+
+echo "⚡ Vercel - Serverless Deployment"
+echo "================================"
+echo ""
+echo "🎯 STEPS:"
+echo "1. Install Vercel CLI: npm install -g vercel"
+echo "2. Run: vercel login"
+echo "3. Run: vercel"
+echo "4. Follow prompts"
+echo ""
+echo "✅ BENEFITS:"
+echo "- Unlimited bandwidth"
+echo "- Edge functions"
+echo "- Instant deployments"
+echo "- Great performance"
+echo ""
+echo "⚠️ NOTE: Requires app modification for serverless"
+echo ""
+echo "🔗 Sign up: https://vercel.com"

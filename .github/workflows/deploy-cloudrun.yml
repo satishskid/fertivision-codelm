@@ -1,0 +1,47 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches: [ stable-deployment ]
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  SERVICE: fertivision
+  REGION: us-central1
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Google Cloud CLI
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Configure Docker to use gcloud as credential helper
+      run: gcloud auth configure-docker
+
+    - name: Build and Deploy to Cloud Run
+      run: |
+        gcloud run deploy $SERVICE \
+          --source . \
+          --platform managed \
+          --region $REGION \
+          --allow-unauthenticated \
+          --memory 512Mi \
+          --cpu 1 \
+          --max-instances 10 \
+          --set-env-vars "FLASK_ENV=production,DEBUG_MODE=true" \
+          --labels "app=fertivision,env=production,deployed-by=github-actions"
+
+    - name: Show service URL
+      run: |
+        SERVICE_URL=$(gcloud run services describe $SERVICE --region=$REGION --format="value(status.url)")
+        echo "🌐 Service deployed at: $SERVICE_URL"
+        echo "🏥 Health check: $SERVICE_URL/health"

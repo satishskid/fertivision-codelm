@@ -25,17 +25,32 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
       - '--memory'
-      - '2Gi'
+      - '512Mi'
       - '--cpu'
-      - '2'
+      - '1'
       - '--timeout'
       - '300'
       - '--concurrency'
       - '100'
       - '--max-instances'
-      - '100'
+      - '10'
       - '--set-env-vars'
-      - 'FLASK_ENV=production,DATABASE_URL=sqlite:///reproductive_analysis.db'
+      - 'FLASK_ENV=production,DEBUG_MODE=true'
+      - '--labels'
+      - 'app=fertivision,env=production,deployed-by=cloud-build'
+  
+  # Test deployment
+  - name: 'gcr.io/cloud-builders/curl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "🧪 Testing deployment..."
+        SERVICE_URL=$$(gcloud run services describe fertivision --region=us-central1 --format="value(status.url)")
+        echo "🌐 Service URL: $$SERVICE_URL"
+        echo "🏥 Testing health endpoint..."
+        curl -f "$$SERVICE_URL/health" || exit 1
+        echo "✅ Deployment test passed!"
 
 images:
   - 'gcr.io/$PROJECT_ID/fertivision:$COMMIT_SHA'
