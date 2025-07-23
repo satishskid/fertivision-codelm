@@ -1,0 +1,37 @@
+theme: jekyll-theme-cayman
+title: "FertiVision Documentation"
+description: "AI-Enhanced Reproductive Medicine Analysis System - Complete Documentation Suite"
+show_downloads: true
+github:
+  repository_url: https://github.com/satishskid/fertivision-codelm
+
+plugins:
+  - jekyll-relative-links
+  - jekyll-optional-front-matter
+  - jekyll-readme-index
+  - jekyll-default-layout
+  - jekyll-titles-from-headings
+
+relative_links:
+  enabled: true
+  collections: true
+
+optional_front_matter:
+  enabled: true
+
+readme_index:
+  enabled: true
+
+default_layout:
+  enabled: true
+
+titles_from_headings:
+  enabled: true
+  strip_title: true
+  collections: true
+
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
