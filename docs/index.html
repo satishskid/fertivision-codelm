@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FertiVision - Deep Vision AI for IVF Laboratory Research</title>
+    <meta name="description" content="Advanced computer vision research platform for IVF laboratories. WHO 2021 compliant morphological analysis, Gardner criteria embryo assessment, and comprehensive reproductive cell research.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --background: #ffffff;
+            --surface: #f8fafc;
+            --border: #e5e7eb;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        .status-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-3px);
+            color: white;
+        }
+
+        /* Research Highlight */
+        .research-highlight {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .research-highlight p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin: 0;
+            color: rgba(255,255,255,0.95);
+        }
+
+        /* System Info */
+        .system-info {
+            background: var(--surface);
+            padding: 60px 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .info-card h3 {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .info-card .value {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Documentation Section */
+        .documentation {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+        }
+
+        .doc-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .doc-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .doc-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .doc-card.user::before { background: var(--gradient-primary); }
+        .doc-card.developer::before { background: var(--gradient-success); }
+        .doc-card.api::before { background: var(--gradient-secondary); }
+        .doc-card.clinic::before { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+        .doc-card.testing::before { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .doc-card.deployment::before { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+
+        .doc-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 25px;
+        }
+
+        .doc-card.user .doc-icon { background: var(--gradient-primary); }
+        .doc-card.developer .doc-icon { background: var(--gradient-success); }
+        .doc-card.api .doc-icon { background: var(--gradient-secondary); }
+        .doc-card.clinic .doc-icon { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+        .doc-card.testing .doc-icon { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .doc-card.deployment .doc-icon { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+
+        .doc-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .doc-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .doc-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .doc-features li {
+            padding: 8px 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .doc-features li::before {
+            content: "✓";
+            color: var(--success-color);
+            font-weight: bold;
+            width: 20px;
+            height: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .doc-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-doc {
+            display: inline-block;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .btn-doc-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-doc-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+            color: white;
+        }
+
+        .btn-doc-secondary {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-doc-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Features Section */
+        .features {
+            background: var(--surface);
+            padding: 80px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 25px;
+            background: var(--gradient-primary);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 60px 0 30px;
+            text-align: center;
+        }
+
+        .footer h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .copyright {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
+            opacity: 0.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .docs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .doc-card {
+                padding: 30px;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <section class="header">
+        <div class="container">
+            <div class="header-content fade-in-up">
+                <h1><i class="fas fa-microscope"></i> FertiVision</h1>
+                <p class="subtitle">Deep Vision AI for IVF Laboratory Research & Analysis</p>
+                
+                <div class="status-badges">
+                    <div class="badge">
+                        <i class="fas fa-dna"></i> WHO 2021 Standards
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-brain"></i> Computer Vision Research
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-award"></i> Gardner Morphology
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-vials"></i> Multi-Sample Analysis
+                    </div>
+                </div>
+
+                <div class="research-highlight">
+                    <p><strong>Advanced Morphological Research:</strong> Automated analysis of sperm morphology, oocyte maturation, embryo development stages, and follicular assessment using state-of-the-art computer vision algorithms.</p>
+                </div>
+
+                <div class="cta-buttons">
+                    <a href="https://fertivision-ai-514605543640.us-central1.run.app" class="btn btn-primary" target="_blank">
+                        <i class="fas fa-flask"></i> Access Research Platform
+                    </a>
+                    <a href="#clinical-research" class="btn btn-secondary">
+                        <i class="fas fa-microscope"></i> View Research Capabilities
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Capabilities -->
+    <section class="system-info">
+        <div class="container">
+            <div class="section-header">
+                <h2>Research Platform Capabilities</h2>
+                <p>Comprehensive computer vision research tools for reproductive medicine and IVF laboratory analysis</p>
+            </div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3><i class="fas fa-dna"></i> Morphological Analysis</h3>
+                    <p class="value">4 Sample Types</p>
+                    <p>Sperm morphology, oocyte maturation, embryo grading, follicle assessment</p>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-microscope"></i> WHO 2021 Parameters</h3>
+                    <p class="value">15+ Metrics</p>
+                    <p>Complete morphological parameter analysis per WHO 2021 guidelines</p>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-award"></i> Gardner Criteria</h3>
+                    <p class="value">Automated Grading</p>
+                    <p>AI-powered embryo classification using Gardner morphological criteria</p>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-brain"></i> Deep Learning Models</h3>
+                    <p class="value">Custom CNNs</p>
+                    <p>Specialized neural networks trained on reproductive cell imagery</p>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-clock"></i> Real-time Analysis</h3>
+                    <p class="value">&lt; 8 Seconds</p>
+                    <p>Rapid image processing for clinical workflow integration</p>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-chart-line"></i> Research Documentation</h3>
+                    <p class="value">200+ Pages</p>
+                    <p>Comprehensive research methodology and validation studies</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section id="documentation" class="documentation">
+        <div class="container">
+            <div class="section-header">
+                <h2>Complete Documentation Suite</h2>
+                <p>Comprehensive guides and manuals for every aspect of FertiVision implementation and operation</p>
+            </div>
+
+            <div class="docs-grid">
+                <!-- User Manual -->
+                <div class="doc-card user">
+                    <div class="doc-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Complete User Manual</h3>
+                    <p>Comprehensive guide for clinic staff, embryologists, and medical professionals using the FertiVision system.</p>
+                    <ul class="doc-features">
+                        <li>Step-by-step analysis workflows</li>
+                        <li>WHO 2021 sperm analysis parameters</li>
+                        <li>Gardner criteria embryo grading</li>
+                        <li>Patient management features</li>
+                        <li>Troubleshooting and best practices</li>
+                    </ul>
+                    <div class="doc-actions">
+                        <a href="https://satishskid.github.io/fertivision-codelm/FERTIVISION_COMPLETE_USER_MANUAL" class="btn-doc btn-doc-primary" target="_blank">
+                            <i class="fas fa-book-open"></i> View Manual
+                        </a>
+                        <a href="https://github.com/satishskid/fertivision-codelm/blob/stable-deployment/FERTIVISION_COMPLETE_USER_MANUAL.md" class="btn-doc btn-doc-secondary" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Developer Manual -->
+                <div class="doc-card developer">
+                    <div class="doc-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Developer Manual</h3>
+                    <p>Technical implementation guide for developers, system administrators, and IT professionals.</p>
+                    <ul class="doc-features">
+                        <li>System architecture details</li>
+                        <li>Installation and setup procedures</li>
+                        <li>API integration patterns</li>
+                        <li>Database schema and design</li>
+                        <li>Security implementation</li>
+                    </ul>
+                    <div class="doc-actions">
+                        <a href="https://satishskid.github.io/fertivision-codelm/DEVELOPER_MANUAL_COMPLETE" class="btn-doc btn-doc-primary" target="_blank">
+                            <i class="fas fa-terminal"></i> View Guide
+                        </a>
+                        <a href="https://github.com/satishskid/fertivision-codelm/blob/stable-deployment/DEVELOPER_MANUAL_COMPLETE.md" class="btn-doc btn-doc-secondary" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+
+                <!-- API Documentation -->
+                <div class="doc-card api">
+                    <div class="doc-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <h3>API Documentation</h3>
+                    <p>Complete REST API reference with all endpoints, authentication, and integration examples.</p>
+                    <ul class="doc-features">
+                        <li>50+ documented endpoints</li>
+                        <li>Authentication and security</li>
+                        <li>Request/response examples</li>
+                        <li>SDK integration guides</li>
+                        <li>FHIR compatibility</li>
+                    </ul>
+                    <div class="doc-actions">
+                        <a href="https://satishskid.github.io/fertivision-codelm/API_DOCUMENTATION_COMPLETE" class="btn-doc btn-doc-primary" target="_blank">
+                            <i class="fas fa-api"></i> View API Docs
+                        </a>
+                        <a href="https://github.com/satishskid/fertivision-codelm/blob/stable-deployment/API_DOCUMENTATION_COMPLETE.md" class="btn-doc btn-doc-secondary" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Clinic Integration Guide -->
+                <div class="doc-card clinic">
+                    <div class="doc-icon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <h3>Clinic Integration Guide</h3>
+                    <p>IVF clinic workflow integration guide with quality assurance protocols and staff training.</p>
+                    <ul class="doc-features">
+                        <li>IVF lab workflow integration</li>
+                        <li>Sample preparation guidelines</li>
+                        <li>Quality assurance protocols</li>
+                        <li>Staff training programs</li>
+                        <li>Regulatory compliance</li>
+                    </ul>
+                    <div class="doc-actions">
+                        <a href="https://satishskid.github.io/fertivision-codelm/CLINIC_INTEGRATION_GUIDE" class="btn-doc btn-doc-primary" target="_blank">
+                            <i class="fas fa-clinic-medical"></i> View Guide
+                        </a>
+                        <a href="https://github.com/satishskid/fertivision-codelm/blob/stable-deployment/CLINIC_INTEGRATION_GUIDE.md" class="btn-doc btn-doc-secondary" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Testing Report -->
+                <div class="doc-card testing">
+                    <div class="doc-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h3>Testing & Validation</h3>
+                    <p>Comprehensive endpoint testing results with performance metrics and validation results.</p>
+                    <ul class="doc-features">
+                        <li>12 endpoints tested</li>
+                        <li>85% success rate achieved</li>
+                        <li>Performance benchmarks</li>
+                        <li>Security assessment</li>
+                        <li>Clinical readiness validation</li>
+                    </ul>
+                    <div class="doc-actions">
+                        <a href="https://satishskid.github.io/fertivision-codelm/ENDPOINT_TESTING_COMPLETE" class="btn-doc btn-doc-primary" target="_blank">
+                            <i class="fas fa-check-double"></i> View Report
+                        </a>
+                        <a href="https://github.com/satishskid/fertivision-codelm/blob/stable-deployment/ENDPOINT_TESTING_COMPLETE.md" class="btn-doc btn-doc-secondary" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Deployment Status -->
+                <div class="doc-card deployment">
+                    <div class="doc-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h3>Deployment Status</h3>
+                    <p>Production deployment verification with system configuration and performance metrics.</p>
+                    <ul class="doc-features">
+                        <li>Google Cloud Run deployment</li>
+                        <li>Auto-scaling configuration</li>
+                        <li>Health monitoring setup</li>
+                        <li>99.9% uptime verified</li>
+                        <li>Firebase Analytics active</li>
+                    </ul>
+                    <div class="doc-actions">
+                        <a href="https://satishskid.github.io/fertivision-codelm/FERTIVISION-AI-DEPLOYMENT-COMPLETE" class="btn-doc btn-doc-primary" target="_blank">
+                            <i class="fas fa-server"></i> View Status
+                        </a>
+                        <a href="https://github.com/satishskid/fertivision-codelm/blob/stable-deployment/FERTIVISION-AI-DEPLOYMENT-COMPLETE.md" class="btn-doc btn-doc-secondary" target="_blank">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Access Section -->
+            <div style="text-align: center; margin-top: 60px; padding: 40px; background: var(--surface); border-radius: 20px;">
+                <h3 style="margin-bottom: 20px; color: var(--text-primary);">Quick Access</h3>
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <a href="https://fertivision-ai-514605543640.us-central1.run.app" class="btn btn-primary" target="_blank">
+                        <i class="fas fa-play"></i> Launch FertiVision
+                    </a>
+                    <a href="https://satishskid.github.io/fertivision-codelm/DOCUMENTATION_SUITE_COMPLETE" class="btn btn-secondary" target="_blank">
+                        <i class="fas fa-book-open"></i> Documentation Suite
+                    </a>
+                    <a href="https://github.com/satishskid/fertivision-codelm" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-github"></i> Source Code
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Key Features</h2>
+                <p>Advanced AI-powered analysis capabilities for comprehensive reproductive medicine assessment</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <h3>Sperm Analysis</h3>
+                    <p>WHO 2021 compliant analysis including concentration, motility, morphology, and vitality assessment with automated classification.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-egg"></i>
+                    </div>
+                    <h3>Oocyte Evaluation</h3>
+                    <p>ESHRE guidelines-based maturity assessment (MII, MI, GV) with quality grading and ICSI suitability evaluation.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-baby"></i>
+                    </div>
+                    <h3>Embryo Grading</h3>
+                    <p>Gardner criteria implementation with expansion, ICM, and TE assessment for optimal transfer selection and pregnancy prediction.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Follicle Analysis</h3>
+                    <p>Automated AFC counting, ovarian reserve assessment, and PCOS detection with detailed size measurements and IVF prognosis.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3>Patient Management</h3>
+                    <p>Comprehensive patient records with fertility scoring, document management, and complete analysis history tracking.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>Professional Reports</h3>
+                    <p>Medical-grade report generation with clinical correlations, recommendations, and professional formatting for clinical documentation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <h3>FertiVision</h3>
+            <p>AI-Enhanced Reproductive Medicine Analysis System</p>
+            
+            <div class="footer-links">
+                <a href="https://fertivision-ai-514605543640.us-central1.run.app" target="_blank">Live System</a>
+                <a href="#documentation">Documentation</a>
+                <a href="https://github.com/satishskid/fertivision-codelm" target="_blank">GitHub</a>
+                <a href="https://satishskid.github.io/fertivision-codelm/API_DOCUMENTATION_COMPLETE" target="_blank">API Reference</a>
+                <a href="https://satishskid.github.io/fertivision-codelm/CLINIC_INTEGRATION_GUIDE" target="_blank">Integration</a>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2025 FertiVision powered by AI | Made by greybrain.ai</p>
+                <p>Advancing reproductive medicine through artificial intelligence</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add loading animation to external links
+        document.querySelectorAll('a[target="_blank"]').forEach(link => {
+            link.addEventListener('click', function() {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<span class="loading"></span> Loading...';
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                }, 2000);
+            });
+        });
+
+        // Add fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-up');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.doc-card, .feature-card, .info-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
