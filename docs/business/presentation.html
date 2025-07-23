@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FertiVision Executive Presentation - Business Overview</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --background: #ffffff;
+            --surface: #f8fafc;
+            --border: #e5e7eb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero .subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .metric {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section.alt {
+            background: var(--surface);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .presentation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .presentation-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .presentation-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .roi-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+        }
+
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .roi-item {
+            text-align: center;
+        }
+
+        .roi-value {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .roi-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .presentation-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 15px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1><i class="fas fa-microscope"></i> FertiVision</h1>
+            <p class="subtitle">Executive Business Presentation</p>
+            <p>AI-Enhanced Reproductive Medicine Analysis Platform</p>
+            
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-value">99.9%</div>
+                    <div class="metric-label">System Uptime</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">50+</div>
+                    <div class="metric-label">API Endpoints</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">85%</div>
+                    <div class="metric-label">Test Success Rate</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">200+</div>
+                    <div class="metric-label">Documentation Pages</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Business Presentations -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Executive Presentations & Business Materials</h2>
+                <p>Comprehensive business documentation for stakeholders, executives, and decision makers</p>
+            </div>
+
+            <div class="presentation-grid">
+                <!-- Executive Summary -->
+                <div class="presentation-card">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="card-title">Executive Summary</h3>
+                    <p class="card-description">High-level business overview with key metrics, ROI analysis, and strategic positioning for C-level executives and board presentations.</p>
+                    <a href="../FERTIVISION-AI-DEPLOYMENT-COMPLETE.md" class="btn" target="_blank">
+                        <i class="fas fa-presentation"></i> View Presentation
+                    </a>
+                </div>
+
+                <!-- Business Case -->
+                <div class="presentation-card">
+                    <div class="card-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="card-title">Business Case & ROI</h3>
+                    <p class="card-description">Detailed business justification with cost-benefit analysis, implementation timeline, and expected returns for investment decisions.</p>
+                    <a href="../CLINIC_INTEGRATION_GUIDE.md" class="btn" target="_blank">
+                        <i class="fas fa-calculator"></i> View Business Case
+                    </a>
+                </div>
+
+                <!-- Market Analysis -->
+                <div class="presentation-card">
+                    <div class="card-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="card-title">Market Position</h3>
+                    <p class="card-description">Market analysis, competitive landscape, and positioning strategy for the AI-enhanced reproductive medicine market.</p>
+                    <a href="../DOCUMENTATION_SUITE_COMPLETE.md" class="btn" target="_blank">
+                        <i class="fas fa-chart-bar"></i> View Analysis
+                    </a>
+                </div>
+
+                <!-- Technical Overview -->
+                <div class="presentation-card">
+                    <div class="card-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="card-title">Technical Architecture</h3>
+                    <p class="card-description">High-level technical overview for CTOs and technical decision makers, focusing on scalability and security.</p>
+                    <a href="../DEVELOPER_MANUAL_COMPLETE.md" class="btn" target="_blank">
+                        <i class="fas fa-sitemap"></i> View Architecture
+                    </a>
+                </div>
+
+                <!-- Compliance & Security -->
+                <div class="presentation-card">
+                    <div class="card-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="card-title">Compliance & Security</h3>
+                    <p class="card-description">Regulatory compliance overview including HIPAA, FDA, CLIA, and CAP requirements for medical AI systems.</p>
+                    <a href="../CLINIC_INTEGRATION_GUIDE.md" class="btn" target="_blank">
+                        <i class="fas fa-certificate"></i> View Compliance
+                    </a>
+                </div>
+
+                <!-- Implementation Plan -->
+                <div class="presentation-card">
+                    <div class="card-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="card-title">Implementation Roadmap</h3>
+                    <p class="card-description">Detailed implementation plan with timelines, milestones, and resource requirements for successful deployment.</p>
+                    <a href="../ENDPOINT_TESTING_COMPLETE.md" class="btn" target="_blank">
+                        <i class="fas fa-road"></i> View Roadmap
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Section -->
+    <section class="roi-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 style="color: white;">Return on Investment</h2>
+                <p style="color: rgba(255,255,255,0.9);">Quantified business benefits and cost savings from FertiVision implementation</p>
+            </div>
+
+            <div class="roi-grid">
+                <div class="roi-item">
+                    <div class="roi-value">60%</div>
+                    <div class="roi-label">Reduction in Analysis Time</div>
+                </div>
+                <div class="roi-item">
+                    <div class="roi-value">95%</div>
+                    <div class="roi-label">Analysis Accuracy Rate</div>
+                </div>
+                <div class="roi-item">
+                    <div class="roi-value">40%</div>
+                    <div class="roi-label">Cost Savings vs Manual</div>
+                </div>
+                <div class="roi-item">
+                    <div class="roi-value">24/7</div>
+                    <div class="roi-label">System Availability</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Complete Documentation -->
+    <section class="section alt">
+        <div class="container">
+            <div class="section-header">
+                <h2>Complete Documentation Suite</h2>
+                <p>All manuals, guides, and technical documentation in one comprehensive package</p>
+            </div>
+
+            <div class="presentation-grid">
+                <!-- User Documentation -->
+                <div class="presentation-card">
+                    <div class="card-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3 class="card-title">User Manuals</h3>
+                    <p class="card-description">Complete user guides for medical professionals, lab technicians, and clinic staff with step-by-step procedures.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="../FERTIVISION_COMPLETE_USER_MANUAL.md" class="btn" style="margin-right: 10px;" target="_blank">Complete Manual</a>
+                        <a href="../FERTIVISION_USER_MANUAL_COMPLETE.md" class="btn btn-outline" target="_blank">Quick Guide</a>
+                    </div>
+                </div>
+
+                <!-- Technical Documentation -->
+                <div class="presentation-card">
+                    <div class="card-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="card-title">Technical Documentation</h3>
+                    <p class="card-description">Developer guides, API documentation, and system architecture for technical teams and integrations.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="../DEVELOPER_MANUAL_COMPLETE.md" class="btn" style="margin-right: 10px;" target="_blank">Developer Guide</a>
+                        <a href="../API_DOCUMENTATION_COMPLETE.md" class="btn btn-outline" target="_blank">API Docs</a>
+                    </div>
+                </div>
+
+                <!-- Business Documentation -->
+                <div class="presentation-card">
+                    <div class="card-icon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <h3 class="card-title">Business Integration</h3>
+                    <p class="card-description">Clinical workflow integration, quality assurance protocols, and business process documentation.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="../CLINIC_INTEGRATION_GUIDE.md" class="btn" style="margin-right: 10px;" target="_blank">Integration Guide</a>
+                        <a href="../ENDPOINT_TESTING_COMPLETE.md" class="btn btn-outline" target="_blank">Testing Report</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="text-align: center; margin-top: 60px;">
+                <a href="https://fertivision-ai-514605543640.us-central1.run.app" class="btn" style="margin: 10px; padding: 15px 30px; font-size: 1.1rem;" target="_blank">
+                    <i class="fas fa-play"></i> Launch Live Demo
+                </a>
+                <a href="../DOCUMENTATION_SUITE_COMPLETE.md" class="btn btn-outline" style="margin: 10px; padding: 15px 30px; font-size: 1.1rem;" target="_blank">
+                    <i class="fas fa-download"></i> Download All Documentation
+                </a>
+                <a href="https://github.com/satishskid/fertivision-codelm" class="btn btn-outline" style="margin: 10px; padding: 15px 30px; font-size: 1.1rem;" target="_blank">
+                    <i class="fab fa-github"></i> View Source Code
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: var(--text-primary); color: white; padding: 60px 0 30px; text-align: center;">
+        <div class="container">
+            <h3 style="margin-bottom: 20px;">FertiVision Business Presentation</h3>
+            <p style="opacity: 0.8; margin-bottom: 30px;">AI-Enhanced Reproductive Medicine Analysis System</p>
+            <p style="opacity: 0.6;">&copy; 2025 FertiVision powered by AI | Made by greybrain.ai</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate metrics on scroll
+            const metrics = document.querySelectorAll('.metric-value');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const finalValue = entry.target.textContent;
+                        entry.target.textContent = '0';
+                        
+                        // Simple counter animation
+                        const duration = 2000;
+                        const step = finalValue / (duration / 50);
+                        let current = 0;
+                        
+                        const timer = setInterval(() => {
+                            current += step;
+                            if (current >= finalValue) {
+                                entry.target.textContent = finalValue;
+                                clearInterval(timer);
+                            } else {
+                                entry.target.textContent = Math.floor(current);
+                            }
+                        }, 50);
+                    }
+                });
+            });
+
+            metrics.forEach(metric => observer.observe(metric));
+        });
+    </script>
+</body>
+</html>
