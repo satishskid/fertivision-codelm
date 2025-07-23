@@ -4,11 +4,22 @@
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
 [![AI](https://img.shields.io/badge/AI-DeepSeek%20LLM-purple.svg)](https://deepseek.com)
 [![Status](https://img.shields.io/badge/status-Production%20Ready-success.svg)](#)
+[![Documentation](https://img.shields.io/badge/docs-Complete-brightgreen.svg)](https://satishskid.github.io/fertivision-codelm/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 **🧬 Powered by AI | Made by greybrain.ai**
 
 FertiVision is a comprehensive AI-powered medical imaging analysis platform specifically designed for reproductive medicine. It provides automated classification and analysis of sperm, oocytes, embryos, and ultrasound images using advanced deep learning models.
+
+## 🎉 **PRODUCTION READY** - [**Live Demo**](https://fertivision-ai-514605543640.us-central1.run.app) | [**Complete Documentation**](https://satishskid.github.io/fertivision-codelm/)
+
+### 📚 **Comprehensive Documentation Suite**
+- 📋 **[Complete User Manual](FERTIVISION_COMPLETE_USER_MANUAL.md)** - For clinic staff and medical professionals
+- 💻 **[Developer Manual](DEVELOPER_MANUAL_COMPLETE.md)** - Technical implementation guide
+- 🔌 **[API Documentation](API_DOCUMENTATION_COMPLETE.md)** - Complete REST API reference (50+ endpoints)
+- 🏥 **[Clinic Integration Guide](CLINIC_INTEGRATION_GUIDE.md)** - IVF workflow integration
+- 🧪 **[Testing Report](ENDPOINT_TESTING_COMPLETE.md)** - Comprehensive validation results
+- 🚀 **[Deployment Status](FERTIVISION-AI-DEPLOYMENT-COMPLETE.md)** - Production verification
 
 ## 🌟 Features
 
