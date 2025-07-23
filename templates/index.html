@@ -4,6 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FertiVision powered by greybrain.ai - AI Reproductive Medicine</title>
+    
+    <!-- Firebase Analytics Integration -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAnalytics, logEvent } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyCMNyB4HI8XKBMxcboKQE8MUAtBIHOduuk",
+            authDomain: "ovul-ind.firebaseapp.com",
+            projectId: "ovul-ind",
+            storageBucket: "ovul-ind.firebasestorage.app",
+            messagingSenderId: "105145457421",
+            appId: "1:105145457421:web:466b5d794be5daaef66e44",
+            measurementId: "G-GZN6GT58CM"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        
+        // Make analytics available globally
+        window.trackAnalysis = (analysisType) => {
+            logEvent(analytics, 'fertility_analysis', {
+                analysis_type: analysisType,
+                timestamp: new Date().toISOString()
+            });
+        };
+        
+        window.trackUpload = (fileType) => {
+            logEvent(analytics, 'image_upload', {
+                file_type: fileType,
+                timestamp: new Date().toISOString()
+            });
+        };
+        
+        window.trackReport = (reportType) => {
+            logEvent(analytics, 'report_generation', {
+                report_type: reportType,
+                timestamp: new Date().toISOString()
+            });
+        };
+        
+        // Track page view
+        logEvent(analytics, 'page_view', {
+            page_title: 'FertiVision Dashboard',
+            timestamp: new Date().toISOString()
+        });
+    </script>
     <style>
         * {
             margin: 0;
@@ -447,6 +494,11 @@
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
             
+            // Track sperm analysis start
+            if (window.trackAnalysis) {
+                window.trackAnalysis('sperm_morphology');
+            }
+            
             try {
                 const response = await fetch('/analyze_sperm', {
                     method: 'POST',
@@ -465,6 +517,11 @@
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
             
+            // Track oocyte analysis start
+            if (window.trackAnalysis) {
+                window.trackAnalysis('oocyte_quality');
+            }
+            
             try {
                 const response = await fetch('/analyze_oocyte', {
                     method: 'POST',
@@ -482,6 +539,11 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
+            
+            // Track embryo analysis start
+            if (window.trackAnalysis) {
+                window.trackAnalysis('embryo_viability');
+            }
             
             try {
                 const response = await fetch('/analyze_embryo', {
@@ -531,6 +593,11 @@
 
         async function viewReport(type, id) {
             try {
+                // Track report generation
+                if (window.trackReport) {
+                    window.trackReport(`${type}_detailed_report`);
+                }
+                
                 const response = await fetch(`/report/${type}/${id}`);
                 const result = await response.json();
                 

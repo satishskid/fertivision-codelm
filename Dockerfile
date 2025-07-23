@@ -15,17 +15,22 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     libssl-dev \
     curl \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Create app directory
 WORKDIR /app
 
 # Copy requirements first for better caching
-COPY requirements.txt requirements_performance.txt ./
+COPY requirements.txt ./
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -r requirements_performance.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
@@ -40,12 +45,15 @@ RUN chmod +x *.sh && \
 # Switch to non-root user
 USER nobody
 
-# Health check
+# Health check with dynamic port
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5000/health || exit 1
+    CMD curl -f http://localhost:$PORT/health || exit 1
 
-# Expose port
-EXPOSE 5000
+# Set environment variables for Cloud Run compatibility
+ENV PORT=8080
 
-# Default command
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--threads", "2", "--worker-class", "gevent", "app_optimized:app"]
+# Expose port (Cloud Run will override this)
+EXPOSE $PORT
+
+# Default command with dynamic port binding
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 4 --threads 2 --worker-class gevent app:app

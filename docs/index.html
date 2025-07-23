@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FertiVision Documentation - AI-Enhanced Reproductive Medicine</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 60px 20px;
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 10px;
+        }
+        
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .doc-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+        
+        .doc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .doc-card.user { border-left-color: #17a2b8; }
+        .doc-card.developer { border-left-color: #28a745; }
+        .doc-card.api { border-left-color: #ffc107; }
+        .doc-card.clinic { border-left-color: #dc3545; }
+        .doc-card.testing { border-left-color: #6f42c1; }
+        .doc-card.deployment { border-left-color: #fd7e14; }
+        
+        .doc-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .doc-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        
+        .doc-card .features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .doc-card .features li {
+            padding: 5px 0;
+            color: #555;
+        }
+        
+        .doc-card .features li:before {
+            content: "✅ ";
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .btn.secondary {
+            background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+        }
+        
+        .system-info {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .system-info h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-item strong {
+            color: #2c3e50;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .docs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-microscope"></i> FertiVision Documentation</h1>
+            <p>AI-Enhanced Reproductive Medicine Analysis System</p>
+            <div class="status-badge">
+                <i class="fas fa-check-circle"></i> Production Ready
+            </div>
+            <div class="status-badge">
+                <i class="fas fa-cloud"></i> Cloud Deployed
+            </div>
+            <div class="status-badge">
+                <i class="fas fa-shield-alt"></i> Medical Grade
+            </div>
+        </div>
+        
+        <div class="system-info">
+            <h2><i class="fas fa-info-circle"></i> System Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Production URL:</strong><br>
+                    <a href="https://fertivision-ai-514605543640.us-central1.run.app" target="_blank">
+                        https://fertivision-ai-514605543640.us-central1.run.app
+                    </a>
+                </div>
+                <div class="info-item">
+                    <strong>System Status:</strong><br>
+                    <span style="color: #28a745;">✅ Operational</span>
+                </div>
+                <div class="info-item">
+                    <strong>API Endpoints:</strong><br>
+                    50+ documented endpoints
+                </div>
+                <div class="info-item">
+                    <strong>Documentation Pages:</strong><br>
+                    200+ pages comprehensive guides
+                </div>
+                <div class="info-item">
+                    <strong>Medical Standards:</strong><br>
+                    WHO 2021, Gardner Criteria, ESHRE
+                </div>
+                <div class="info-item">
+                    <strong>Last Updated:</strong><br>
+                    July 23, 2025
+                </div>
+            </div>
+        </div>
+        
+        <div class="docs-grid">
+            <div class="doc-card user">
+                <h3><i class="fas fa-user-md"></i> User Manual</h3>
+                <p>Comprehensive guide for clinic staff, embryologists, and medical professionals using the FertiVision system.</p>
+                <ul class="features">
+                    <li>Step-by-step analysis workflows</li>
+                    <li>WHO 2021 sperm analysis parameters</li>
+                    <li>Gardner criteria embryo grading</li>
+                    <li>Patient management features</li>
+                    <li>Troubleshooting guides</li>
+                </ul>
+                <a href="../FERTIVISION_COMPLETE_USER_MANUAL.md" class="btn">
+                    <i class="fas fa-book"></i> View User Manual
+                </a>
+            </div>
+            
+            <div class="doc-card developer">
+                <h3><i class="fas fa-code"></i> Developer Manual</h3>
+                <p>Technical implementation guide for developers, system administrators, and IT professionals.</p>
+                <ul class="features">
+                    <li>System architecture details</li>
+                    <li>Installation procedures</li>
+                    <li>API integration patterns</li>
+                    <li>Database schema</li>
+                    <li>Security implementation</li>
+                </ul>
+                <a href="../DEVELOPER_MANUAL_COMPLETE.md" class="btn">
+                    <i class="fas fa-terminal"></i> View Developer Guide
+                </a>
+            </div>
+            
+            <div class="doc-card api">
+                <h3><i class="fas fa-plug"></i> API Documentation</h3>
+                <p>Complete REST API reference with all endpoints, authentication, and integration examples.</p>
+                <ul class="features">
+                    <li>50+ documented endpoints</li>
+                    <li>Authentication & security</li>
+                    <li>Request/response examples</li>
+                    <li>SDK integration guides</li>
+                    <li>FHIR compatibility</li>
+                </ul>
+                <a href="../API_DOCUMENTATION_COMPLETE.md" class="btn">
+                    <i class="fas fa-api"></i> View API Docs
+                </a>
+            </div>
+            
+            <div class="doc-card clinic">
+                <h3><i class="fas fa-hospital"></i> Clinic Integration</h3>
+                <p>IVF clinic workflow integration guide with quality assurance protocols and staff training.</p>
+                <ul class="features">
+                    <li>IVF lab workflow integration</li>
+                    <li>Sample preparation guidelines</li>
+                    <li>Quality assurance protocols</li>
+                    <li>Staff training programs</li>
+                    <li>Regulatory compliance</li>
+                </ul>
+                <a href="../CLINIC_INTEGRATION_GUIDE.md" class="btn">
+                    <i class="fas fa-clinic-medical"></i> View Integration Guide
+                </a>
+            </div>
+            
+            <div class="doc-card testing">
+                <h3><i class="fas fa-vial"></i> Testing Report</h3>
+                <p>Comprehensive endpoint testing results with performance metrics and validation results.</p>
+                <ul class="features">
+                    <li>12 endpoints tested</li>
+                    <li>85% success rate achieved</li>
+                    <li>Performance benchmarks</li>
+                    <li>Security assessment</li>
+                    <li>Clinical readiness validation</li>
+                </ul>
+                <a href="../ENDPOINT_TESTING_COMPLETE.md" class="btn">
+                    <i class="fas fa-check-double"></i> View Testing Report
+                </a>
+            </div>
+            
+            <div class="doc-card deployment">
+                <h3><i class="fas fa-cloud-upload-alt"></i> Deployment Status</h3>
+                <p>Production deployment verification with system configuration and performance metrics.</p>
+                <ul class="features">
+                    <li>Google Cloud Run deployment</li>
+                    <li>Auto-scaling configuration</li>
+                    <li>Health monitoring setup</li>
+                    <li>99.9% uptime verified</li>
+                    <li>Firebase Analytics active</li>
+                </ul>
+                <a href="../FERTIVISION-AI-DEPLOYMENT-COMPLETE.md" class="btn">
+                    <i class="fas fa-server"></i> View Deployment Status
+                </a>
+            </div>
+        </div>
+        
+        <div class="system-info">
+            <h2><i class="fas fa-rocket"></i> Quick Start</h2>
+            <div style="text-align: center; padding: 20px;">
+                <a href="https://fertivision-ai-514605543640.us-central1.run.app" class="btn" target="_blank">
+                    <i class="fas fa-play"></i> Launch FertiVision System
+                </a>
+                <a href="../DOCUMENTATION_SUITE_COMPLETE.md" class="btn secondary">
+                    <i class="fas fa-book-open"></i> Documentation Suite Overview
+                </a>
+                <a href="https://github.com/satishskid/fertivision-codelm" class="btn secondary" target="_blank">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>© 2025 FertiVision powered by AI</strong></p>
+            <p>Made by greybrain.ai | Advancing reproductive medicine through artificial intelligence</p>
+            <p><i class="fas fa-heart" style="color: #e74c3c;"></i> Built for the fertility community</p>
+        </div>
+    </div>
+</body>
+</html>

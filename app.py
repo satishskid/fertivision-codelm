@@ -27,9 +27,22 @@ try:
     from model_service import service_manager
     MODEL_CONFIG_AVAILABLE = True
     logging.info("✅ Model configuration system loaded successfully")
-except ImportError:
+except ImportError as e:
     MODEL_CONFIG_AVAILABLE = False
-    logging.warning("⚠️ Model configuration system not available")
+    # Create dummy objects for graceful fallback
+    class DummyModelManager:
+        def get_available_models(self):
+            return ["demo-analysis"]
+        def get_current_model(self):
+            return "demo-analysis"
+    
+    class DummyServiceManager:
+        def is_available(self):
+            return False
+    
+    model_manager = DummyModelManager()
+    service_manager = DummyServiceManager()
+    logging.warning("⚠️ Model configuration system not available - using fallback mode")
 
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -2444,4 +2457,12 @@ def test_document_upload():
     return send_from_directory('.', 'test_document_upload.html')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Get port from environment variable (Cloud Run compatibility)
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_ENV') != 'production'
+    
+    app.logger.info(f"🚀 Starting FertiVision on port {port}")
+    app.logger.info(f"📊 Debug mode: {debug}")
+    app.logger.info(f"🌍 Environment: {os.environ.get('FLASK_ENV', 'development')}")
+    
+    app.run(debug=debug, host='0.0.0.0', port=port)
